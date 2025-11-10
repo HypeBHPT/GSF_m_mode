@@ -36,7 +36,7 @@ void FieldEquations(parameters par, derivs_2D W, double *Xpar, int iDom, int j1,
 	get_ComplexField(par, indx_Re_phi, indx_Im_phi, W , &phi);
 
 	A_phi = Diff_Operator(par, phi, iDom, j1, j2, 0);	
-	Source_phi =HyperboloidalEffectiveSource(par, iDom, j1, j2); //ATTENTION: JUMPS SET TO ZERO ON LINES 261 323
+	Source_phi =HyperboloidalEffectiveSource(par, iDom, j1, j2);
 	//Test_Effective_Source(par, iDom, j1, j2);
 	//
 
