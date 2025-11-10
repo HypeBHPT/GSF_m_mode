@@ -15,13 +15,8 @@ int main()
 		N = 150, 
 		l_max = 60;
 	
-	double r0_over_M = 10.;
-
+	double r0_over_M = 10.;	
 	
-	double rh_over_M = 2, 
-		   r0_over_rh = r0_over_M/rh_over_M, 
-		   rh_over_r0 = 1./r0_over_rh, 
-		   eta = sqr(r0_over_rh)*sqrt(1.-rh_over_r0)/(1.+ r0_over_rh);
 
 	double start_time, final_time;
 
@@ -38,7 +33,7 @@ int main()
 			parameters par;	
 
 			//Read Parameters-----------------------
-			set_parameters(&par, r0_over_M, l, m, eta, N);
+			set_parameters(&par, r0_over_M, l, m, N);
 			// par.fout = stdout;
 			//--------------------------------------   
 			printf("Solving eta = %lf, ell = %d, m = %d on thread = %d (%d)\n", par.eta, par.ell, par.m, par.i_omp, n_omp ); 

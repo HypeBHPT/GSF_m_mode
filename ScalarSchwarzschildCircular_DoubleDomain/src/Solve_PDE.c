@@ -21,7 +21,8 @@ int main()
 
 	
 	int	m, m_min =0 , m_max =0, delta_m=1;			
-	#pragma omp parallel for //collapse(3)	
+	
+	#pragma omp parallel for 
 	for(m=m_min; m<=m_max; m+=delta_m){		
 				
 	
@@ -40,6 +41,7 @@ int main()
 				// output_RetardedField_Boundary(par);
 				// output_Cheb_RetardedField_Boundary(par);
 				// output_Legendre_Retarded_at_Boundary(par);
+				
 				
 				load_EffectiveSource(&par);
 				load_Puncture_at_Boundary(&par);
@@ -65,7 +67,7 @@ int main()
 				//OUTPUT SOLUTION-------------------------------------------------------------------------------	
 				output_Solution(par, X);
 				output_SpecCoef(par, X);	
-				// output_SelfForce(par, X);				
+				output_SelfForce(par, X);				
 				
 				// output_SolutionChebyshevPostProc(par, X);
 				// output_Toy2ndSource(par, X, N, N_min, N_max, delta_N, m, m_min, m_max);

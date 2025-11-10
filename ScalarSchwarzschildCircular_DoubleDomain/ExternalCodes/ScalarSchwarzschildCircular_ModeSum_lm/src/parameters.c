@@ -1,6 +1,6 @@
 #include "Solve_ODE.h"
 
-void set_parameters(parameters *par, double r0, int l, int m, double eta, int N){
+void set_parameters(parameters *par, double r0, int l, int m, int N){
 
 	//INPUT PHYSICAL PARAMETERS------------------------------------
 	sprintf((*par).Equation, "ReggeWheeler"); //Zerilli; BardeenPress;
@@ -9,7 +9,11 @@ void set_parameters(parameters *par, double r0, int l, int m, double eta, int N)
 
 	(*par).spin = 0; //Field's spin weight
 	(*par).q = 1.; //Particle's scalar Charge
-	(*par).eta = eta; //Size of Excition Region in R = eta rh, with R = radius in particle' s frame
+	
+	
+	
+	
+	
 	
 	(*par).ell = l; //Angular Mode
 	(*par).m = m; //Azimutal Mode
@@ -18,6 +22,11 @@ void set_parameters(parameters *par, double r0, int l, int m, double eta, int N)
 	(*par).lambda_over_M = 4.; //Hyperboloidal Length Scale in units of M
 	(*par).rho_0 = (*par).rh_over_M/(*par).lambda_over_M; //Hyperboloidal Radial Gauge
 	(*par).rho_1 = 0. ; //Hyperboloidal Radial Gauge
+
+	double r0_over_rh = (*par).r0_over_M/(*par).rh_over_M, 
+		   rh_over_r0 = 1./r0_over_rh;	
+	
+	(*par).eta = sqr(r0_over_rh)*sqrt(1.-rh_over_r0)/(1.+ r0_over_rh);; //Size of Excition Region in R = eta rh, with R = radius in particle' s frame
 	
 	//INPUT NUMERICAL RESOLUTION------------------------------------
 	(*par).effective_source_FLAG = 0; // (0) Analytical Expression; (1) Read File

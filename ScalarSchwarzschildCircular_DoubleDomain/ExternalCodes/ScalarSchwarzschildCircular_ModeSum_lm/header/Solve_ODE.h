@@ -78,7 +78,7 @@ int Index(parameters par, int iDom, int iField, int i);
 void Get_Index_Arrays(parameters *par);
 
 // Routines in "parameteres.c"
-void set_parameters(parameters *par, double r0, int l, int m, double eta, int N);
+void set_parameters(parameters *par, double r0, int l, int m,  int N);
 
 // Routines in "InitialGuess.c"
 void Initial_Guess(parameters par, double *X);
