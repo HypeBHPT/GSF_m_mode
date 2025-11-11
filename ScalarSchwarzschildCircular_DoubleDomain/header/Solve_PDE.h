@@ -24,7 +24,7 @@
 #define bicgstab_verb 1
 
 
-#define FD_ORDER 4
+#define FD_ORDER 6
 #if FD_ORDER == 2
  #define STENCILSIZE 9 
 #elif FD_ORDER == 4
@@ -49,8 +49,7 @@ typedef struct PARAMETERS{
 	int spin, m, nbar, N1_LoadPunc, N1_LoadSeff, N2_LoadSeff, lmax, idom_particle;
 	
 	double q, r0_over_M, r_plus_over_M, r_minus_over_M, lambda_over_M, rh_over_M, rho_0, rho_1, f0, E0, M_Omega0, L0_over_M, eta,
-	sigma_initial[nDom], sigma_final[nDom], y_initial[nDom], y_final[nDom],
-	sigma0, sigma_minus, sigma_plus, jump_field[nFields][nDom-1], jump_derivative[nFields][nDom-1],
+	sigma0, sigma_minus, sigma_plus,
 	**Re_cheb_Seff, **Im_cheb_Seff, 
 	**Re_cheb_PuncField, **Im_cheb_PuncField,
 	*Re_cheb_phi_Punc, *Re_cheb_phi_Punc_sigma, *Re_cheb_phi_Punc_y,

@@ -11,7 +11,7 @@ int main()
 
 	int n_omp = omp_get_max_threads();
 	int m, 
-		m_max = 0, 
+		m_max = 1, 
 		N = 150, 
 		l_max = 60;
 	
@@ -23,7 +23,7 @@ int main()
 	start_time = omp_get_wtime();
 
 	
-	for(m=0; m<=m_max; m++){
+	for(m=1; m<=m_max; m++){
 	
 	
 		int l, l_min=m;

@@ -20,7 +20,7 @@ int main()
 	int N = 50; //Order of numerical resolution (assuming same N in all domains and all directions)
 
 	
-	int	m, m_min =0 , m_max =0, delta_m=1;			
+	int	m, m_min =1 , m_max =1, delta_m=1;			
 	
 	#pragma omp parallel for 
 	for(m=m_min; m<=m_max; m+=delta_m){		

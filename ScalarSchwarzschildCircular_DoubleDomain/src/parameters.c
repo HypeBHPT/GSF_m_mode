@@ -55,7 +55,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	(*par).SOLVER_METHOD = 2;
 		
 	int N1, N2;
-	N1=N;
+	N1=N/2;
 	N2=N;
 
 	(*par).idom_particle = 1;
@@ -66,9 +66,6 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	//DIRECTION 1
 	sprintf((*par).grid_1[iDom], "Lobatto"); //Grid 
 	(*par).N1[iDom]   =  N1 ; //Resolution 
-
-	(*par).sigma_initial[iDom] = 0; //DEPRECATED
-	(*par).sigma_final[iDom] = sigma_minus; //DEPRECATED
 	
 	(*par).AnMR_x_boundary_1[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
 	(*par).AnMR_kappa_1[iDom] = 0.; //AnMR Parameter
@@ -77,9 +74,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	sprintf((*par).grid_2[iDom], "Lobatto"); //Grid
 	(*par).N2[iDom]   =  N2 ; //Resolution 
 
-	(*par).y_initial[iDom] = 0.;
-	(*par).y_final[iDom] = 1.;	
-	
+
 	(*par).AnMR_x_boundary_2[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
 	(*par).AnMR_kappa_2[iDom] = 0.; //AnMR Parameter
 	//------------------------------------------------------
@@ -90,9 +85,6 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	sprintf((*par).grid_1[iDom], "Lobatto"); //Grid 
 	(*par).N1[iDom]   =  N1 ; //Resolution 
 
-	(*par).sigma_initial[iDom] = sigma_minus; //DEPRECATED
-	(*par).sigma_final[iDom] = sigma_plus; //DEPRECATED
-	
 	(*par).AnMR_x_boundary_1[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
 	(*par).AnMR_kappa_1[iDom] = 0.; //AnMR Parameter
 	
@@ -101,9 +93,6 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	// sprintf((*par).grid_2[iDom], "Lobatto"); //Grid
 	(*par).N2[iDom]   =  N2 ; //Resolution 
 
-	(*par).y_initial[iDom] = 0.;
-	(*par).y_final[iDom] = 1.;	
-	
 	(*par).AnMR_x_boundary_2[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
 	(*par).AnMR_kappa_2[iDom] = 0.; //AnMR Parameter
 	//------------------------------------------------------

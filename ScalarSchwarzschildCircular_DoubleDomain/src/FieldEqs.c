@@ -78,17 +78,17 @@ void BoundaryCondition(parameters par, derivs_2D W, double *Xpar, int iDom, int 
 	get_sigma(par, iDom, chi_1, chi_2, &sigma);
 	get_y(par, iDom, chi_1, chi_2, &y);
 
-	func_sigma_derivs_2D f = Test_Func(par, sigma.d0, y.d0);
+	
 
 	switch(iDom){
 		case 0:
 			if(j1 == par.N1[iDom]){
-				F[0] = creal(phi.d0 - f.d0);//creal(phi.d0 - par.phi_ret_minus[j2]);
-				F[1] = cimag(phi.d0 - f.d0);//cimag(phi.d0 - par.phi_ret_minus[j2]);
+				F[0] = creal(phi.d0 - par.phi_ret_minus[j2]);
+				F[1] = cimag(phi.d0 - par.phi_ret_minus[j2]);
 			}
 			else if(j1 == 0){
-				F[0] = creal(phi.d0 - f.d0);//creal(phi.d0 - par.phi_ret_plus[j2]);
-				F[1] = cimag(phi.d0 - f.d0);//cimag(phi.d0 - par.phi_ret_plus[j2]);
+				F[0] = creal(phi.d0 - par.phi_ret_plus[j2]);
+				F[1] = cimag(phi.d0 - par.phi_ret_plus[j2]);
 			}
 			else if(j2 == par.N2[iDom]){
 				FieldJumpEquations_Boundary2(par, W, Xpar, iDom, j1, j2, F);	
