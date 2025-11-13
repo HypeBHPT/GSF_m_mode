@@ -23,7 +23,6 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	(*par).spin = 0; //Field's spin weight
 	(*par).q = 1., //Particle's scalar Charge
 	
-	// (*par).ell = 2; //Angular Mode
 	(*par).m = m; //Azimutal Mode
 
 	(*par).lambda_over_M = 4.; //Hyperboloidal Length Scale in units of M
