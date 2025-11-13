@@ -27,7 +27,7 @@ r0=10 M; (*Particle orbital radius*)
 
 m=2; (*m-mode*)
 nbarmax=2; (*Puncture Order*)
-NN=100; (*Spectral Resolution for Puncture/Effective Source*)
+NN=50; (*Spectral Resolution for Puncture/Effective Source*)
 Prec=4 MachinePrecision; (*Internal digits for Puncture/Effective Source*)
 
 
@@ -1018,4 +1018,7 @@ Close[fp];
 
 CloseKernels[];
 Print["Done"];
+
+
+
 
