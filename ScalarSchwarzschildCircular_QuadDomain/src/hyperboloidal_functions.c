@@ -197,7 +197,7 @@ double complex Diff_Operator(parameters par, complex_derivs_2D W, int iDom, int 
 double complex HyperboloidalEffectiveSource(parameters par, int iDom, int j1, int j2){
   double complex hyp_S_eff=0;
   
-  if(iDom == par.idom_particle){
+  if(iDom == par.Dom_ptcl){
     int N1_Seff=par.N1_LoadSeff, N2_Seff=par.N2_LoadSeff;
     
     double real_hS_eff, imag_hS_eff, chi_1=par.grid_chi_1[iDom][j1], chi_2=par.grid_chi_2[iDom][j2];

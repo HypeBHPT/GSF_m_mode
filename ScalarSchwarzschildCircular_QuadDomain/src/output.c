@@ -22,8 +22,7 @@ void output_Solution(parameters par, double *X){
       }
       Chebyshev_Coefficients_2D(Sol, c, N1, par.grid_1[iDom], N2, par.grid_2[iDom]);
 
-    
-    
+      
       sprintf(fn, "data/%s/Solution_dom_%d_fields_%d.dat",par.SimName, iDom, iF);
       sprintf(fn_SpcCoord, "data/%s/Solution_chi_dom_%d_fields_%d.dat",par.SimName, iDom, iF);    
       fp=fopen(fn ,"w");
@@ -818,7 +817,7 @@ void output_F_of_X(parameters par, double *X){
 void output_EffectiveSource(parameters par){
   int N1 = par.N1_LoadSeff,
       N2=par.N2_LoadSeff,
-      idom_part = par.idom_particle, i1, i2, N1_out=par.N1[idom_part], N2_out=par.N2[idom_part];
+      idom_part = par.Dom_ptcl, i1, i2, N1_out=par.N1[idom_part], N2_out=par.N2[idom_part];
   FILE *fp;
   char fn[500];
   func_derivs_2D sigma, y;
@@ -859,7 +858,7 @@ void output_Puncture_at_Boundary(parameters par){
   fp = fopen(fn,"w");
   fprintf(fp, "#1:i1\t #2:cheb(Re@phi_punc)\t #3:cheb(Re@phi_punc,sigma)\t #4:cheb(Re@phi_punc,y)\n");
   
-  int i1, N1=par.N1[par.idom_particle];
+  int i1, N1=par.N1[par.Dom_ptcl];
   for(i1=0; i1<=N1; i1++){
     fprintf(fp, "%d\t %3.15e\t %3.15e\t %3.15e\n", i1, par.Re_cheb_phi_Punc[i1],par.Re_cheb_phi_Punc_sigma[i1],par.Re_cheb_phi_Punc_y[i1]);
   }
@@ -888,7 +887,7 @@ void output_Puncture_at_Boundary(parameters par){
 void output_PunctureField(parameters par){
   int N1 = par.N1_LoadSeff,//N1_out=100,
       N2=par.N2_LoadSeff, //N2_out=100,
-      idom_part = par.idom_particle, i1, i2, N1_out=par.N1[idom_part], N2_out=par.N2[idom_part];
+      idom_part = par.Dom_ptcl, i1, i2, N1_out=par.N1[idom_part], N2_out=par.N2[idom_part];
   FILE *fp;
   char fn[500];
   func_derivs_2D sigma, y;
@@ -976,117 +975,7 @@ void output_Toy2ndSource(parameters par, double *X, int N, int N_min, int N_max,
   free_derivs_2D(&Sol, par.ntotal);
   return;
 }
-//-------------------------------------------------------------------------------
-void output_RetardedField_Boundary(parameters par){
 
-  int j2, N2=par.N2[0];
-  double *f_minus=dvector(0,N2),
-         *f_plus=dvector(0,N2);
-
-  for(j2=0; j2<=N2; j2++){
-    
-    f_minus[j2] = creal(par.phi_ret_minus[j2]);
-    f_plus[j2]  = creal(par.phi_ret_plus[j2]);
-  }
-  // Chebyshev_Coefficients(f_minus, cf_minus, N2, par.grid_2[0]);
-  // Chebyshev_Coefficients(f_plus,  cf_plus, N2, par.grid_2[0]); 
-
-  FILE *fp;
-  char fn[500];
-  sprintf(fn, "data/%s/ret_field_boundary_ellmax_%d.dat",par.SimName, par.lmax);
-
-  fp = fopen(fn, "w");
-  fprintf(fp, "#1:i2\t 2:c_i2 (minus)\t 3:c_i2 (plus)");
-  for(j2=0; j2<=N2; j2++){
-    double x2 = par.grid_chi_2[0][j2];
-      func_derivs_2D y_min, y_max;
-      get_y(par, 0, -1., x2, &y_min);
-      get_y(par, 0, -1., x2, &y_max);
-    fprintf(fp, "%3.15e\t %3.15e\t %3.15e\t %3.15e\n", y_min.d0, y_max.d0, f_minus[j2], f_plus[j2]);
-  }
-  
-  free_dvector(f_minus, 0, N2);
-  free_dvector(f_plus, 0, N2);
-  fclose(fp);
-  return;
-}
-//--------------------------------
-void output_Legendre_Retarded_at_Boundary(parameters par){
-	FILE *fp = NULL, *fr = NULL;
-	char fn_output[500], fn[500];
-	int l, m = par.m, l_min = m, lmax=par.lmax;
-	double eta_read, sigma_minus_read, sigma_plus_read,
-		   real_phi_ret_lm, imag_phi_ret_lm, small = 1.e-15;
-	double complex phi_ret_plus, phi_ret_minus;
-
-
-
-
-	
-	sprintf(fn_output, "data/%s/phi_ret_lm.dat", par.SimName);
-	fp = fopen(fn_output, "w");
-	fprintf(fp, "#1:ell\t |phi_lm|@sigma_minus\t |phi_lm|@sigma_plus\n" );
-
-	for(l=l_min; l<=lmax; l+=2){
-		sprintf(fn,"InputData/r0_over_M_%.5lf/eta_%3.5lf/m_%d/phi_ret_boundary_ell_%d.dat",par.r0_over_M, par.eta, par.m, l);		
-
-		if( (fr = fopen(fn,"r")) == NULL){
-				fprintf(stderr, "Error in load_Retarded_at_Boundary: file %s not found\n", fn);
-				exit(-1);
-		}
-		fscanf(fr, "eta\t%lf\tsigma_minus\t%lf\tsigma_plus\t%lf\n", &eta_read, &sigma_minus_read, &sigma_plus_read);
-		
-		if( fabs(1.- eta_read/par.eta) > small || fabs(sigma_minus_read-par.sigma_minus) > small || fabs(sigma_plus_read-par.sigma_plus) > small  ){
-			fprintf(stderr,"Error in load_Retarded_at_Boundary: input parameters do not match simulation\n");
-			fprintf(stderr,"eta = %3.20e (%3.20e)\n", eta_read, par.eta );
-			fprintf(stderr,"sigma_minus = %3.15e (%3.15e)\n", sigma_minus_read, par.sigma_minus );
-			fprintf(stderr,"sigma_plus = %3.15e (%3.15e)\n", sigma_plus_read, par.sigma_plus );
-			
-			exit(-1);
-		}
-		fscanf(fr, "real phi_minus\t%lf\t imag phi_minus\t%lf\n", &real_phi_ret_lm, &imag_phi_ret_lm);
-		
-		phi_ret_minus = real_phi_ret_lm + I*imag_phi_ret_lm;
-
-
-		fscanf(fr, "real phi_plus\t%lf\t imag phi_plus\t%lf\n", &real_phi_ret_lm, &imag_phi_ret_lm);
-		phi_ret_plus = real_phi_ret_lm + I*imag_phi_ret_lm;
-
-		fprintf(fp, "%d\t %3.15e\t %3.15e\n", l, cabs(phi_ret_minus), cabs(phi_ret_plus) );
-	
-		fclose(fr);
-	}
-	fclose(fp);
-	
-	return;
-}
-//-------------------------------------------------------------------------------
-void output_Cheb_RetardedField_Boundary(parameters par){
-
-  int j2, N2=par.N2[0];
-  double *f_minus=dvector(0,N2), *cf_minus=dvector(0,N2),
-         *f_plus=dvector(0,N2),  *cf_plus=dvector(0,N2);
-
-  for(j2=0; j2<=N2; j2++){
-    f_minus[j2] = creal(par.phi_ret_minus[j2]);
-    f_plus[j2]  = creal(par.phi_ret_plus[j2]);
-  }
-  Chebyshev_Coefficients(f_minus, cf_minus, N2, par.grid_2[0]);
-  Chebyshev_Coefficients(f_plus,  cf_plus, N2, par.grid_2[0]); 
-
-  FILE *fp;
-  char fn[500];
-  sprintf(fn, "data/%s/cheb_ret_field_boundary.dat",par.SimName);
-
-  fp = fopen(fn, "w");
-  fprintf(fp, "#1:i2\t 2:c_i2 (minus)\t 3:c_i2 (plus)");
-  for(j2=0; j2<=N2; j2++) fprintf(fp, "%d\t %3.15e\t %3.15e\n", j2,  cf_minus[j2], cf_plus[j2]);
-  
-  fclose(fp);
-  free_dvector(f_minus, 0, N2); free_dvector(cf_minus, 0, N2);
-  free_dvector(f_plus, 0, N2);  free_dvector(cf_plus, 0, N2);
-  return;
-}
 //-------------------------------------------------------------------------------
 void output_SelfForce(parameters par, double *X){
   //NOTE: OUTPUT TAKES INTO ACCOUNT THE CONTRIBUTIONS FROM m AND -m

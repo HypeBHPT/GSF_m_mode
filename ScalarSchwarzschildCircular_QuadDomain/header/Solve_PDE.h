@@ -9,7 +9,7 @@
 #include <omp.h>
 #endif
 
-#define nDom 2
+#define nDom 4
 #define nFields 2
 #define nPar 0
 
@@ -24,7 +24,7 @@
 #define bicgstab_verb 1
 
 
-#define FD_ORDER 6
+#define FD_ORDER 4
 #if FD_ORDER == 2
  #define STENCILSIZE 9 
 #elif FD_ORDER == 4
@@ -46,7 +46,7 @@ typedef struct PARAMETERS{
 	//---- HYPERBOLOIDAL SELF FORCE PARAMETERS
 	
 
-	int spin, m, nbar, N1_LoadPunc, N1_LoadSeff, N2_LoadSeff, lmax, idom_particle;
+	int spin, m, nbar, N1_LoadPunc, N1_LoadSeff, N2_LoadSeff, lmax, Dom_scri, Dom_bulk, Dom_ptcl, Dom_hrzn;
 	
 	double q, r0_over_M, r_plus_over_M, r_minus_over_M, lambda_over_M, rh_over_M, rho_0, rho_1, f0, E0, M_Omega0, L0_over_M, eta,
 	sigma0, sigma_minus, sigma_plus,
@@ -55,11 +55,11 @@ typedef struct PARAMETERS{
 	*Re_cheb_phi_Punc, *Re_cheb_phi_Punc_sigma, *Re_cheb_phi_Punc_y,
 	*Im_cheb_phi_Punc, *Im_cheb_phi_Punc_sigma, *Im_cheb_phi_Punc_y;
 
-	double complex s, ds_dr0, *phi_ret_plus, *phi_ret_minus;
+	double complex s, ds_dr0;
 
 	double prec;
 	FILE *fout; 
-	int i_omp, N1_PuncSeff, N2_PuncSeff, CoordMap_FLAG;
+	int i_omp, N1_PuncSeff, N2_PuncSeff, CoordMap_FLAG, TEST_Func_FLAG;
 	
 } parameters;
 
@@ -121,6 +121,7 @@ void output_test_function(parameters par);
 double complex Test_Effective_Source(parameters par, int iDom, int i1, int i2);
 void output_test_Effective_Source(parameters par);
 void output_test_function_error(parameters par, double *X);
+void Check_Derivative(parameters par, char *fn, int j1, int j2, derivs_2D W, int FLAG);
 
 // Routines in "parameters.c"
 void set_parameters(parameters *par, int N, int nbar, int m, double r0);
@@ -133,7 +134,6 @@ int solve_equations(parameters par, double *X);
 void read_header(parameters par, FILE *fr, int *N1, int *N2);
 void load_Puncture_at_Boundary(parameters *par);
 void load_EffectiveSource(parameters *par);
-void load_Retarded_at_Boundary(parameters *par);
 void free_external_data(parameters *par);
 void load_PunctureField(parameters *par);
 
@@ -163,6 +163,7 @@ double complex Diff_Operator(parameters par, complex_derivs_2D W, int iDom, int 
 void func_alpha2(parameters par, double sig, double complex *alpha2, double complex *dalpha2_dsig, double complex *dalpha2_dr0);
 void func_alpha1(parameters par, double sig, double complex *alpha1, double complex *dalpha1_dr0);
 void func_alpha0(parameters par, double sig, double complex *alpha0, double complex *dalpha0_dr0);
+void func_alpha0_ell(parameters par, double sig, int ell, double complex *alpha0, double complex *dalpha0_dr0);
 void func_gamma2(parameters par, double y, double complex *gamma2);
 void func_gamma1(parameters par, double y, double complex *gamma1);
 double complex HyperboloidalEffectiveSource(parameters par, int iDom, int j1, int j2);
@@ -203,14 +204,14 @@ void BoundaryCondition(parameters par, derivs_2D W, double *Xpar, int iDom, int 
 void LinearBoundaryCondition(parameters par, derivs_2D w, derivs_2D Dw, double *Xpar, double *DXpar, int iDom, int j1, int j2, double *J);
 void ParameterEquations(parameters par, derivs_2D w, double *Xpar, double *F);
 void LinearParameterEquations(parameters par, derivs_2D w, derivs_2D Dw, double *Xpar, double *DXpar, double *J);
-void FieldJumpEquations_Boundary1(parameters par, derivs_2D W, double *Xpar, int iDom, int j1, int j2, double *F);
-void LinearFieldJumpEquations_Boundary1(parameters par, derivs_2D W, derivs_2D DW, double *Xpar, double *DXpar, int iDom, int j1, int j2, double *J);
-void FieldDerivativeJumpEquations_Boundary1(parameters par, derivs_2D W, double *Xpar, int iDom, int j1, int j2, double *F);
-void LinearFieldDerivativeJumpEquations_Boundary1(parameters par, derivs_2D W, derivs_2D DW, double *Xpar, double *DXpar, int iDom, int j1, int j2, double *J);
-void FieldJumpEquations_Boundary2(parameters par, derivs_2D W, double *Xpar, int iDom, int j1, int j2, double *F);
-void LinearFieldJumpEquations_Boundary2(parameters par, derivs_2D W, derivs_2D DW, double *Xpar, double *DXpar, int iDom, int j1, int j2, double *J);
-void FieldDerivativeJumpEquations_Boundary2(parameters par, derivs_2D W, double *Xpar, int iDom, int j1, int j2, double *F);
-void LinearFieldDerivativeJumpEquations_Boundary2(parameters par, derivs_2D W, derivs_2D DW, double *Xpar, double *DXpar, int iDom, int j1, int j2, double *J);
+void FieldJumpEquations_Boundary_chi1(parameters par, derivs_2D W, double *Xpar, int iDom_a, int iDom_b, int j1_a, int j1_b, int j2, double *F);
+void LinearFieldJumpEquations_Boundary_chi1(parameters par, derivs_2D W, derivs_2D DW, double *Xpar, double *DXpar, int iDom_a, int iDom_b, int j1_a, int j1_b, int j2, double *J);
+void FieldDerivativeJumpEquations_Boundary_chi1(parameters par, derivs_2D W, double *Xpar, int iDom_a, int iDom_b, int j1_a, int j1_b, int j2, double *F);
+void LinearFieldDerivativeJumpEquations_Boundary_chi1(parameters par, derivs_2D W, derivs_2D DW, double *Xpar, double *DXpar, int iDom_a, int iDom_b, int j1_a, int j1_b, int j2, double *J);
+void FieldJumpEquations_Boundary_chi2(parameters par, derivs_2D W, double *Xpar, int iDom_a, int iDom_b, int j1, int j2_a, int j2_b, double *F);
+void LinearFieldJumpEquations_Boundary_chi2(parameters par, derivs_2D W, derivs_2D DW, double *Xpar, double *DXpar, int iDom_a, int iDom_b, int j1, int j2_a, int j2_b, double *J);
+void FieldDerivativeJumpEquations_Boundary_chi2(parameters par, derivs_2D W, double *Xpar, int iDom_a, int iDom_b, int j1, int j2_a, int j2_b, double *F);
+void LinearFieldDerivativeJumpEquations_Boundary_chi2(parameters par, derivs_2D W, derivs_2D DW, double *Xpar, double *DXpar, int iDom_a, int iDom_b, int j1, int j2_a, int j2_b, double *J);
 
 
 // Routines in "derivatives.c"
@@ -256,12 +257,12 @@ void output_SpecCoef_AX(parameters par, double *X);
 void output_Solution_AX(parameters par, double *X);
 
 void output_Toy2ndSource(parameters par, double *X, int N, int N_min, int N_max, int delta_N, int m, int m_min, int m_max);
-void output_Cheb_RetardedField_Boundary(parameters par);
+
+
 void output_FieldParticle(parameters par, double *X);
 void output_SolutionDerivatives(parameters par, double *X);
 
-void output_RetardedField_Boundary(parameters par);
-void output_Legendre_Retarded_at_Boundary(parameters par);
+
 void output_PunctureField(parameters par);
 void output_Puncture_at_Boundary(parameters par);
 

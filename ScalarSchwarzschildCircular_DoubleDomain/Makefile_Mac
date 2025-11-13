@@ -24,7 +24,7 @@ SRC = load_data.c test_routines.c SelfForce_Functions.c parameters.c Coordinates
 #set of object .o files
 OBJS = $(SRC:.c=.o)
 
-EXECTBL  = SolveODE
+EXECTBL  = SolvePDE
 
 #rule to say that .o files depends on .c and files on DEPS. All those
 #files are going to be checked on the execution for the up-to-date version

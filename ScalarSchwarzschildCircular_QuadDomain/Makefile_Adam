@@ -6,7 +6,7 @@ INCD = $(BASE)/header
 
 
 #Compiler of C
-CC=icc
+CC=icx
 
 #Flags -I tells which directory to look for the .h files 
 CFLAGS =-Wall -I$(INCD) -O3

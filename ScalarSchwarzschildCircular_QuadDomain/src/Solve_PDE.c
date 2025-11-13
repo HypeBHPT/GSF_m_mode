@@ -17,7 +17,7 @@ int main()
 	int n_omp = omp_get_max_threads();
 
 	int nbar = 2; //Order of Puncture Scheme
-	int N = 50; //Order of numerical resolution (assuming same N in all domains and all directions)
+	int N = 32; //Order of numerical resolution (assuming same N in all domains and all directions)
 
 	
 	int	m, m_min =2 , m_max =2, delta_m=1;			
@@ -35,20 +35,15 @@ int main()
 				//------------------------------------------------- 
 				printf("Solving r0_over_M = %lf, m = %d, nbar = %d on thread = %d (%d)\n", par.r0_over_M, par.m, par.nbar, par.i_omp, n_omp ); 
 				fprintf(par.fout, "m = %d\t nbar_max =%d\t Data for N=%d\n", m, nbar, N);
-
-				//Load External Data-----------------------------
-				load_Retarded_at_Boundary(&par);
-				// output_RetardedField_Boundary(par);
-				// output_Cheb_RetardedField_Boundary(par);
-				// output_Legendre_Retarded_at_Boundary(par);
-				
-				
-				load_EffectiveSource(&par);
-				load_Puncture_at_Boundary(&par);
-				// load_PunctureField(&par);								
-				// output_PunctureField(par);
-				// output_Puncture_at_Boundary(par);	
-				// exit(-1);			
+			
+				if(par.TEST_Func_FLAG==0){
+					load_EffectiveSource(&par);
+					load_Puncture_at_Boundary(&par);
+					// load_PunctureField(&par);								
+					// output_PunctureField(par);
+					// output_Puncture_at_Boundary(par);	
+					// exit(-1);		
+				}							
 				//----------------------------------------------
 				
 
@@ -62,12 +57,16 @@ int main()
 				int Newton_iter = solve_equations(par, X);
 				final_time_solver = clock(); //Stop measuring time					
 				fprintf(par.fout, "Time= %3.3e s (Newton Iteration = %d)\n\n", (final_time_solver-start_time_solver)/CLOCKS_PER_SEC, Newton_iter);
-				//-----------------------------------------------------------------------------------------------	
+				// -----------------------------------------------------------------------------------------------	
 
 				//OUTPUT SOLUTION-------------------------------------------------------------------------------	
 				output_Solution(par, X);
 				output_SpecCoef(par, X);	
-				output_SelfForce(par, X);				
+				output_SelfForce(par, X);
+				if(par.TEST_Func_FLAG==1){
+					output_test_function(par);
+					output_test_function_error(par, X);
+				}	
 				
 				// output_SolutionChebyshevPostProc(par, X);
 				// output_Toy2ndSource(par, X, N, N_min, N_max, delta_N, m, m_min, m_max);
@@ -85,7 +84,7 @@ int main()
 				
 				free_dvector(X, 0, par.Ntotal);	
 				free_grid(&par);
-				free_external_data(&par);
+				if(par.TEST_Func_FLAG==0) free_external_data(&par);
 				// fclose(par.fout);
 				
 				

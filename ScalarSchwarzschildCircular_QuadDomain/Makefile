@@ -6,13 +6,13 @@ INCD = $(BASE)/header
 
 
 #Compiler of C
-CC=icc
+CC=gcc
 
 #Flags -I tells which directory to look for the .h files 
-CFLAGS =-Wall -I$(INCD) -O3
+CFLAGS =-Wall -I$(INCD) -O3 -I /opt/local/include/libomp  -L /opt/local/lib/libomp
 
 #Libraries (Math)
-LIBS=-fopenmp
+LIBS=-Xpreprocessor -fopenmp -lomp
 
 #set of headers .h files
 DEPS = $(INCD)/$(wildcard *.h)
@@ -24,7 +24,7 @@ SRC = load_data.c test_routines.c SelfForce_Functions.c parameters.c Coordinates
 #set of object .o files
 OBJS = $(SRC:.c=.o)
 
-EXECTBL  = SolvePDE
+EXECTBL  = SolveODE
 
 #rule to say that .o files depends on .c and files on DEPS. All those
 #files are going to be checked on the execution for the up-to-date version

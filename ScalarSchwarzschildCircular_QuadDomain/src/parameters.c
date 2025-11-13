@@ -1,6 +1,8 @@
 #include "Solve_PDE.h"
 
 void set_parameters(parameters *par, int N, int nbar, int m, double r0){
+	(*par).TEST_Func_FLAG = 1;	//0: No Test Function; 1: Test Function
+	
 	//INPUT PHYSICAL PARAMETERS------------------------------------
 	
 
@@ -52,17 +54,23 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	// 1: Direct LU Inversion
 	// 2: Iterative BiCGStab w/ FinDif Preconditioner
 	
-	(*par).SOLVER_METHOD = 2;
+	(*par).SOLVER_METHOD = 1;
 		
 	int N1, N2;
-	N1=N;
+	N1=N/2;
 	N2=N;
 
-	(*par).idom_particle = 1;
+	(*par).Dom_scri = 0;
+	(*par).Dom_bulk = 1;
+	(*par).Dom_ptcl = 2;
+	(*par).Dom_hrzn = 3;
+
+	
 	(*par).CoordMap_FLAG = 2;
+	
 	int iDom;
 	//------- Set Up Domain 0--------------------------------
-	iDom = 0;
+	iDom = (*par).Dom_scri;
 	//DIRECTION 1
 	sprintf((*par).grid_1[iDom], "Lobatto"); //Grid 
 	(*par).N1[iDom]   =  N1 ; //Resolution 
@@ -74,13 +82,46 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	sprintf((*par).grid_2[iDom], "Lobatto"); //Grid
 	(*par).N2[iDom]   =  N2 ; //Resolution 
 
+	(*par).AnMR_x_boundary_2[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
+	(*par).AnMR_kappa_2[iDom] = 0.; //AnMR Parameter
+	//------------------------------------------------------
+	//------- Set Up Domain 1--------------------------------
+	iDom = (*par).Dom_bulk;
+	//DIRECTION 1
+	sprintf((*par).grid_1[iDom], "Lobatto"); //Grid 
+	(*par).N1[iDom]   =  N1 ; //Resolution 
 
+	
+	
+	(*par).AnMR_x_boundary_1[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
+	(*par).AnMR_kappa_1[iDom] = 0.; //AnMR Parameter
+	
+	//DIRECTION 2
+	sprintf((*par).grid_2[iDom], "Lobatto"); //Grid
+	(*par).N2[iDom]   =  N2 ; //Resolution 
+	
 	(*par).AnMR_x_boundary_2[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
 	(*par).AnMR_kappa_2[iDom] = 0.; //AnMR Parameter
 	//------------------------------------------------------
 
-	//------- Set Up Domain 1--------------------------------
-	iDom = 1;
+	//------- Set Up Domain 2--------------------------------
+	iDom = (*par).Dom_ptcl;
+	//DIRECTION 1
+	sprintf((*par).grid_1[iDom], "Lobatto"); //Grid 
+	(*par).N1[iDom]   =  N1 ; //Resolution 
+	
+	(*par).AnMR_x_boundary_1[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
+	(*par).AnMR_kappa_1[iDom] = 0.; //AnMR Parameter
+	
+	//DIRECTION 2
+	sprintf((*par).grid_2[iDom], "Radau_RHS"); //Grid
+	(*par).N2[iDom]   =  N2 ; //Resolution 
+	
+	(*par).AnMR_x_boundary_2[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
+	(*par).AnMR_kappa_2[iDom] = 0.; //AnMR Parameter
+	//------------------------------------------------------
+	//------- Set Up Domain 3--------------------------------
+	iDom = (*par).Dom_hrzn;
 	//DIRECTION 1
 	sprintf((*par).grid_1[iDom], "Lobatto"); //Grid 
 	(*par).N1[iDom]   =  N1 ; //Resolution 
@@ -89,17 +130,20 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	(*par).AnMR_kappa_1[iDom] = 0.; //AnMR Parameter
 	
 	//DIRECTION 2
-	sprintf((*par).grid_2[iDom], "Radau_RHS"); //Grid
-	// sprintf((*par).grid_2[iDom], "Lobatto"); //Grid
+	sprintf((*par).grid_2[iDom], "Lobatto"); //Grid
 	(*par).N2[iDom]   =  N2 ; //Resolution 
-
+	
 	(*par).AnMR_x_boundary_2[iDom]= 1.; //AnMR at Left (-1) or Right (1) Boundary
 	(*par).AnMR_kappa_2[iDom] = 0.; //AnMR Parameter
 	//------------------------------------------------------
+		
 
-	sprintf((*par).SimName, "Coord%d/r0_over_M_%3.5f/eta_%2.2f/N_input_%d/Prec_%lf/nbarMax_%d/m_%d/N1_%d_N2_%d/", (*par).CoordMap_FLAG,(*par).r0_over_M, (*par).eta,(*par).N2_PuncSeff, (*par).prec, (*par).nbar, (int)(*par).m, N1, N2 );// Simulation Name
-	// sprintf((*par).SimName, "TestField_Reg/nbar_%d", nbar );// Simulation Name
+	if((*par).TEST_Func_FLAG==0)
+		sprintf((*par).SimName, "Coord%d/r0_over_M_%3.5f/eta_%2.2f/N_input_%d/Prec_%lf/nbarMax_%d/m_%d/N1_%d_N2_%d/", (*par).CoordMap_FLAG,(*par).r0_over_M, (*par).eta,(*par).N2_PuncSeff, (*par).prec, (*par).nbar, (int)(*par).m, N1, N2 );
+	else
+		sprintf((*par).SimName, "Coord%d/r0_over_M_%3.5f/eta_%2.2f/TestFunction/m_%d/N1_%d_N2_%d/", (*par).CoordMap_FLAG,(*par).r0_over_M, (*par).eta, (int)(*par).m, N1, N2 );
 	
+
 
 	//DERIVED PHYSICAL PARAMETERS---------------------------------
 	(*par).E0 = f0/sqrt(1-3./(*par).r0_over_M);
@@ -130,7 +174,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	(*par).i_omp = omp_get_thread_num();
     char fn[500];
     sprintf(fn, "output_thread_%d.txt",(*par).i_omp);
-    // (*par).fout = fopen(fn, "a");
+    (*par).fout = fopen(fn, "a");
 
 	return;
 }
