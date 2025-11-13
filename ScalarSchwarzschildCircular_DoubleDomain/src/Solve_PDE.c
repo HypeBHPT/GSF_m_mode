@@ -11,13 +11,13 @@ int main()
 	
 	
 	double  start_time, final_time;	
-	double r0 = 10.;
+	double r0 = 10.; //Particle's orbital radius in units of M
 
 	start_time = omp_get_wtime();
 	int n_omp = omp_get_max_threads();
 
 	int nbar = 2; //Order of Puncture Scheme
-	int N = 50; //Order of numerical resolution (assuming same N in all domains and all directions)
+	int N = 40; //Order of numerical resolution (assuming same N in all domains and all directions)
 
 	
 	int	m, m_min =2 , m_max =2, delta_m=1;			
@@ -43,8 +43,9 @@ int main()
 				// output_Legendre_Retarded_at_Boundary(par);
 				
 				
-				load_EffectiveSource(&par);
 				load_Puncture_at_Boundary(&par);
+				load_EffectiveSource(&par);
+				
 				// load_PunctureField(&par);								
 				// output_PunctureField(par);
 				// output_Puncture_at_Boundary(par);	

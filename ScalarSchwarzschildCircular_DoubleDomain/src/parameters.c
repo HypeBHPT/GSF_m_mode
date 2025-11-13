@@ -39,8 +39,8 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	(*par).sigma_plus =  sigma_plus;
 
 	//RESOLUTION INPUT DATA ------------------------------------
-	(*par).N1_PuncSeff = 100;
-	(*par).N2_PuncSeff = 100;
+	(*par).N1_PuncSeff = 50;
+	(*par).N2_PuncSeff = 50;
 	(*par).prec = 63.81836;
 	//63.81836;
 	//159.54590;//63.81836;//31.90918;////31.90918;//15.95459; //Precision in Mathematica Notebook
