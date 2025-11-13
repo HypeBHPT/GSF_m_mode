@@ -55,7 +55,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	(*par).SOLVER_METHOD = 2;
 		
 	int N1, N2;
-	N1=N;
+	N1=N/2;
 	N2=N;
 
 	(*par).idom_particle = 1;

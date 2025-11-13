@@ -17,7 +17,7 @@ int main()
 	int n_omp = omp_get_max_threads();
 
 	int nbar = 2; //Order of Puncture Scheme
-	int N = 40; //Order of numerical resolution (assuming same N in all domains and all directions)
+	int N = 60; //Order of numerical resolution (assuming same N in all domains and all directions)
 
 	
 	int	m, m_min =2 , m_max =2, delta_m=1;			
