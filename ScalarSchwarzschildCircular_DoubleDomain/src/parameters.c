@@ -23,7 +23,6 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	(*par).spin = 0; //Field's spin weight
 	(*par).q = 1., //Particle's scalar Charge
 	
-	// (*par).ell = 2; //Angular Mode
 	(*par).m = m; //Azimutal Mode
 
 	(*par).lambda_over_M = 4.; //Hyperboloidal Length Scale in units of M
@@ -39,8 +38,8 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	(*par).sigma_plus =  sigma_plus;
 
 	//RESOLUTION INPUT DATA ------------------------------------
-	(*par).N1_PuncSeff = 100;
-	(*par).N2_PuncSeff = 100;
+	(*par).N1_PuncSeff = 50;
+	(*par).N2_PuncSeff = 50;
 	(*par).prec = 63.81836;
 	//63.81836;
 	//159.54590;//63.81836;//31.90918;////31.90918;//15.95459; //Precision in Mathematica Notebook
@@ -55,7 +54,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double r0){
 	(*par).SOLVER_METHOD = 2;
 		
 	int N1, N2;
-	N1=N;
+	N1=N/2;
 	N2=N;
 
 	(*par).idom_particle = 1;

@@ -15,7 +15,7 @@
 
 
 #define Newton_itmin  2  
-#define Newton_itmax  5  
+#define Newton_itmax  6
 #define Newton_tol    1.e-12
 #define Newton_verb   1 
 
