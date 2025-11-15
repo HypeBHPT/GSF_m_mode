@@ -47,6 +47,32 @@ int main()
 						// //Read Parameters----------------------------------
 						
 						set_parameters(&par, N, nbar, m, M_Omega0, a_over_M);
+
+						//------------------------------------------------
+						double dr=0.1, dtheta=0.1, Punc[2], Seff[2], dPunc[8],d2Punc[20];
+						int Nr = 101, Ntheta=101, ir, itheta;
+
+						FILE *fp=fopen("Test_EffSource.dat", "w");
+						fprintf(fp, "# r/M \t theta/pi \t Re(Seff) \t Im(Seff) \n");
+						
+
+						for(ir=0;ir<=Nr; ir++){
+							double r = par.r0_over_M+(1 -2.*ir/Nr) * dr;  
+							for(itheta=0; itheta<=Ntheta; itheta++){
+								double theta = Pih+(1 -2.*itheta/Ntheta) * dtheta;
+								struct coordinate xBL_coord = {r, theta, 0., 0.};
+								effsource_calc_m(m, &xBL_coord, Punc, dPunc, d2Punc, Seff);
+								fprintf(fp, "%3.15e %3.15e %3.15e %3.15e \n", r-par.r0_over_M, theta-Pih, Seff[0], Seff[1] );  
+
+							}
+							fprintf(fp, "\n");
+
+						}
+						fclose(fp);
+						exit(-1);
+						//------------------------------------------------
+
+
 						
 						// par.fout = stdout;
 						
