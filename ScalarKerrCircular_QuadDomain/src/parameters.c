@@ -176,9 +176,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
             / sqrt( (*par).r0_over_M * ( (*par).r0_over_M - 3.0 + 2.0 * (*par).FLAG_Trajec * (*par).a_over_M / sqrt((*par).r0_over_M) ) );
 
 	// Specific angular momentum L0/M (dimensionless)
-	(*par).L0_over_M = (*par).FLAG_Trajec * 
-                   ( pow((*par).r0_over_M, 2.0) - 2.0 * (*par).FLAG_Trajec * (*par).a_over_M * sqrt((*par).r0_over_M) + pow((*par).a_over_M, 2.0) )
-                   / sqrt( (*par).r0_over_M * ( (*par).r0_over_M - 3.0 + 2.0 * (*par).FLAG_Trajec * (*par).a_over_M / sqrt((*par).r0_over_M) ) );
+	(*par).L0_over_M = (*par).FLAG_Trajec * ( sqr((*par).r0_over_M) - 2.0 * (*par).FLAG_Trajec * (*par).a_over_M * sqrt((*par).r0_over_M) + sqr((*par).a_over_M) ) / ( (*par).r0_over_M * sqrt( (*par).r0_over_M - 3.0 + 2.0 * (*par).FLAG_Trajec * (*par).a_over_M / sqrt((*par).r0_over_M) ) );
 
 	struct coordinate xp;
 	xp.r = (*par).r0_over_M;
