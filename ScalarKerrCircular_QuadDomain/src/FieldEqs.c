@@ -51,7 +51,7 @@ void LinearFieldEquations(parameters par, derivs_2D W, derivs_2D DW, double *Xpa
 // -------------------------------------------------------------------------------	
 // -------------------------------------------------------------------------------	
 void BoundaryCondition(parameters par, derivs_2D W, double *Xpar, int iDom, int j1, int j2, double *F){
-	FieldEquations(par, W, Xpar, iDom, j1, j2, F);
+	// FieldEquations(par, W, Xpar, iDom, j1, j2, F);
 	// return;
 
 
@@ -63,6 +63,8 @@ void BoundaryCondition(parameters par, derivs_2D W, double *Xpar, int iDom, int 
 
 	get_ComplexField(par, indx_Re_phi, indx_Im_phi, W , &w);
 	get_PhysDerv_from_SpecDerv_complex(par, iDom, j1, j2, w, &phi);
+
+	
 	
 	switch(iDom){
 		case 0: //Dom Scri
@@ -75,6 +77,8 @@ void BoundaryCondition(parameters par, derivs_2D W, double *Xpar, int iDom, int 
 				FieldDerivativeJumpEquations_Boundary_chi1(par, W, Xpar, par.Dom_scri, par.Dom_bulk, 0, par.N1[par.Dom_bulk], j2, F);
 			else 
 				FieldEquations(par, W, Xpar, iDom, j1, j2, F);
+
+			
 		break;	
 
 		case 1: //Dom Bulk
@@ -91,6 +95,7 @@ void BoundaryCondition(parameters par, derivs_2D W, double *Xpar, int iDom, int 
 		 	
 		 	else 
 				FieldEquations(par, W, Xpar, iDom, j1, j2, F);
+				
 		break;
 
 		case 2: //Dom Particle
@@ -104,7 +109,7 @@ void BoundaryCondition(parameters par, derivs_2D W, double *Xpar, int iDom, int 
 			else	
 				FieldEquations(par, W, Xpar, iDom, j1, j2, F);
 		break;
-
+			printf("In BoundaryCondition dom %d\n", iDom); 	exit(-1);
 		case 3: //Dom Horizon
 			if(iDom!=par.Dom_hrzn){
 				fprintf(stderr, "Error in LinearBoundaryCondition: idom = %d dom_horizon=%d\n", iDom, par.Dom_hrzn);
@@ -293,8 +298,8 @@ void FieldJumpEquations_Boundary_chi2(parameters par, derivs_2D W, double *Xpar,
 		get_PhysDerv_from_SpecDerv_complex(par, iDom_b, j1, j2_b, U_b, &phi_Ret);
 
 		if(par.TEST_Func_FLAG==0){
-			double phiP = iF%2==0? Clenshaw_Chebyshev(par.Re_cheb_phi_Punc, par.N1_LoadPunc, chi_1_prtcl):
-						   		   Clenshaw_Chebyshev(par.Im_cheb_phi_Punc, par.N1_LoadPunc, chi_1_prtcl);	
+			double phiP = iF%2==0? Clenshaw_Chebyshev(par.Re_cheb_phi_Punc, par.N1_PuncSeff, chi_1_prtcl):
+						   		   Clenshaw_Chebyshev(par.Im_cheb_phi_Punc, par.N1_PuncSeff, chi_1_prtcl);	
 			jump = -phiP;			
 		}
 		else{
@@ -375,11 +380,11 @@ void FieldDerivativeJumpEquations_Boundary_chi2(parameters par, derivs_2D W, dou
 		NormalDerv_phi_Ret = ( - y_Dom_b.d1 * phi_Res.dsigma +  sigma_Dom_b.d1*phi_Res.dy)/fac_Dom_b;
 
 		if(par.TEST_Func_FLAG==0){		
-			phiP_dsigma = iF%2==0? Clenshaw_Chebyshev(par.Re_cheb_phi_Punc_sigma, par.N1_LoadPunc, chi_1_prtcl):
-								Clenshaw_Chebyshev(par.Im_cheb_phi_Punc_sigma, par.N1_LoadPunc, chi_1_prtcl);
+			phiP_dsigma = iF%2==0? Clenshaw_Chebyshev(par.Re_cheb_phi_Punc_sigma, par.N1_PuncSeff, chi_1_prtcl):
+								Clenshaw_Chebyshev(par.Im_cheb_phi_Punc_sigma, par.N1_PuncSeff, chi_1_prtcl);
 
-			phiP_dy     = iF%2==0? Clenshaw_Chebyshev(par.Re_cheb_phi_Punc_y, par.N1_LoadPunc, chi_1_prtcl):
-								Clenshaw_Chebyshev(par.Im_cheb_phi_Punc_y, par.N1_LoadPunc, chi_1_prtcl);
+			phiP_dy     = iF%2==0? Clenshaw_Chebyshev(par.Re_cheb_phi_Punc_y, par.N1_PuncSeff, chi_1_prtcl):
+								Clenshaw_Chebyshev(par.Im_cheb_phi_Punc_y, par.N1_PuncSeff, chi_1_prtcl);
 			NormalDerv_phi_P = ( -y_Dom_a.d1 * phiP_dsigma + sigma_Dom_a.d1*phiP_dy )/fac_Dom_a;
 			NormalDerv_jump = - NormalDerv_phi_P;
 		}

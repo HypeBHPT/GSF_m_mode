@@ -832,11 +832,11 @@ void output_EffectiveSource(parameters par){
   fprintf(fp, "#1:x1\t 2:x2\t 3:sigma\t 4:y\t 5:Re Seff\t 6:Im Seff\n");
 
   for(i1=0; i1<=N1_out; i1++){
-    x1 = get_grid( par.grid_1_PuncSeff, i1, N1 );//par.grid_chi_1[idom_part][i1];
-    // x1 = -1. + 2.*i1/N1_out;
+    // x1 = get_grid( par.grid_1_PuncSeff, i1, N1 );//par.grid_chi_1[idom_part][i1];
+    x1 = -1. + 2.*i1/N1_out;
     for(i2=0; i2<=N2_out; i2++){
-      x2=get_grid( par.grid_2_PuncSeff, i2, N2 );//par.grid_chi_2[idom_part][i2];
-      // x2 = -1. + 2.*i2/N2_out;
+      // x2=get_grid( par.grid_2_PuncSeff, i2, N2 );//par.grid_chi_2[idom_part][i2];
+      x2 = -1. + 2.*i2/N2_out;
       
       get_sigma(par, idom_part, x1, x2, &sigma);
       get_y(par, idom_part, x1, x2, &y); 

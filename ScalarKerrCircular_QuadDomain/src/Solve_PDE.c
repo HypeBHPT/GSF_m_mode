@@ -13,13 +13,13 @@ int main()
 	double start_time, final_time;	
 	double r0_over_M_Schwarzschild = 10, 
 		   M_Omega0 = pow(r0_over_M_Schwarzschild, -3./2), 
-		   a_over_M = 0.;
+		   a_over_M = 0.5;
 
 	start_time = omp_get_wtime();
 	int n_omp = omp_get_max_threads();
 
 	int nbar = 2; //Order of Puncture Scheme
-	int N = 16; //Order of numerical resolution (assuming same N in all domains and all directions)
+	int N = 30; //Order of numerical resolution (assuming same N in all domains and all directions)
 	int	m=2; //Azimutal Mode
 	
 	
@@ -46,35 +46,8 @@ int main()
 						double  *X;
 						// //Read Parameters----------------------------------
 						
-						set_parameters(&par, N, nbar, m, M_Omega0, a_over_M);
-
-						//------------------------------------------------
-						double dr=0.1, dtheta=0.1, Punc[2], Seff[2], dPunc[8],d2Punc[20];
-						int Nr = 101, Ntheta=101, ir, itheta;
-
-						FILE *fp=fopen("Test_EffSource.dat", "w");
-						fprintf(fp, "# r/M \t theta/pi \t Re(Seff) \t Im(Seff) \n");
-						
-
-						for(ir=0;ir<=Nr; ir++){
-							double r = par.r0_over_M+(1 -2.*ir/Nr) * dr;  
-							for(itheta=0; itheta<=Ntheta; itheta++){
-								double theta = Pih+(1 -2.*itheta/Ntheta) * dtheta;
-								struct coordinate xBL_coord = {r, theta, 0., 0.};
-								effsource_calc_m(m, &xBL_coord, Punc, dPunc, d2Punc, Seff);
-								fprintf(fp, "%3.15e %3.15e %3.15e %3.15e \n", r-par.r0_over_M, theta-Pih, Seff[0], Seff[1] );  
-
-							}
-							fprintf(fp, "\n");
-
-						}
-						fclose(fp);
-						exit(-1);
-						//------------------------------------------------
-
-
-						
-						// par.fout = stdout;
+						set_parameters(&par, N, nbar, m, M_Omega0, a_over_M);						
+						par.fout = stdout;
 						
 						//------------------------------------------------- 
 						printf("Solving a_over_M = %lf, M_Omega0 = %lf, r0_over_M = %lf, m = %d, nbar = %d, N=%d, on thread = %d (%d)\n", par.a_over_M, par.M_Omega0, par.r0_over_M, par.m, par.nbar, N, par.i_omp, n_omp ); 
@@ -92,7 +65,7 @@ int main()
 							output_Puncture_at_Boundary(par);	
 							output_EffectiveSource(par);
 							
-							exit(-1);		
+									
 						}							
 						//----------------------------------------------
 						
@@ -105,6 +78,7 @@ int main()
 						double  start_time_solver, final_time_solver;
 						start_time_solver = clock(); //Start measuring time	
 						int Newton_iter = solve_equations(par, X);
+						
 						final_time_solver = clock(); //Stop measuring time					
 						fprintf(par.fout, "Time= %3.3e s (Newton Iteration = %d)\n\n", (final_time_solver-start_time_solver)/CLOCKS_PER_SEC, Newton_iter);
 						// -----------------------------------------------------------------------------------------------	
@@ -136,7 +110,7 @@ int main()
 						free_grid(&par);
 						if(par.TEST_Func_FLAG==0) free_external_data(&par);
 			// }
-			fclose(par.fout);
+			// fclose(par.fout);
 		// }		
 	// }
 	final_time = omp_get_wtime();

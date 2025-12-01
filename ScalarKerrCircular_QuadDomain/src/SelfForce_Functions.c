@@ -193,19 +193,6 @@ void get_Puncture_EffectiveSource(parameters *par){
     theta = acos(sqrt(y.d0)) ;
     struct coordinate xBL_coord = {r, theta, 0., 0.};
 
-
-    if(i2>=N2-10){
-      double chi_1 = get_grid( (*par).grid_1_PuncSeff, i1, N1 );
-      chi_2 = get_grid( (*par).grid_2_PuncSeff, N2-11, N2 );
-      get_sigma(*par, idom_part, chi_1, chi_2, &sigma);    
-      func_r_of_sigma(*par, sigma.d0, &r, &dr_dsigma); 
-
-      get_y(*par, idom_part, chi_1, chi_2, &y);
-      theta = acos(sqrt(y.d0)) ;
-      xBL_coord.r = r;
-      xBL_coord.theta = theta;  
-      
-    }
     effsource_calc_m(m, &xBL_coord, Punc_BL_Bound, dPunc_BL_Bound_dx, d2Punc_BL_Bound_dx2, Seff_BL); 
 
     chi_2 = get_grid( (*par).grid_2_PuncSeff, i2, N2 );
@@ -213,14 +200,7 @@ void get_Puncture_EffectiveSource(parameters *par){
     func_r_of_sigma(*par, sigma.d0, &r, &dr_dsigma); 
 
     get_y(*par, idom_part, chi_1, chi_2, &y);
-    theta = acos(sqrt(y.d0)) ;
-
-    // if(i2>=N2-10){
-    //   Seff_BL[0]=0.;
-    //   Seff_BL[1]=0.;    
-      
-    // }
-    
+    theta = acos(sqrt(y.d0)) ;   
     
     if( chi_2 == 1. ){ //Boundary points
       double complex Punc_BL_Bound_complex = Punc_BL_Bound[0] + I* Punc_BL_Bound[1],

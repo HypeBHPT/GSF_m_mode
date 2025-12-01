@@ -95,15 +95,17 @@ int newton_direct(parameters par, double *X)
 	int Ntotal = par.Ntotal, ntotal=Ntotal+1, *indx, iter=0, j, FLAG=-1;
 	double *F, *DX, **J, d, norm;
 	
+	
 	F     = dvector(0, Ntotal);
 	DX    = dvector(0, Ntotal);
 	
 	indx  = ivector(0, Ntotal);
 	J     = dmatrix(0, Ntotal, 0, Ntotal);
+	
 
 	F_of_X(par, X, F);
 	// PrintVector(par, F, 0, Ntotal);
-	// exit(-1);
+	
 
 	norm = norm2(F, ntotal);
 	

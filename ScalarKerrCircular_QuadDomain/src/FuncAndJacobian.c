@@ -47,13 +47,14 @@ void F_of_X(parameters par, double *X, double *F)
 	copy_X_to_W(par, X, W);
 	Get_Derivatives(par, W);
 	get_ExtraPar_from_X(par, X, ExtraParameters);	
+	
     
 	for(iDom=0; iDom<nDom; iDom++){
 		N1 = par.N1[iDom]; 
 		N2 = par.N2[iDom];
 		for(j2=0; j2<=N2; j2++){
 			for(j1=0; j1<=N1; j1++){
-				// get_W_at_Grid(par, iDom, j1, j2, W, W_atGrid);
+				get_W_at_Grid(par, iDom, j1, j2, W, W_atGrid);
 				if(j1*j2*( j1-N1 )*( j2-N2 )!=0 )
 					FieldEquations(par, W, ExtraParameters, iDom, j1, j2, Eq);
 				else
@@ -66,6 +67,7 @@ void F_of_X(parameters par, double *X, double *F)
 	    }
 	  }
 	}
+	
 	
 	
 

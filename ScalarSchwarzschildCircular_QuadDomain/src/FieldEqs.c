@@ -238,10 +238,9 @@ void FieldDerivativeJumpEquations_Boundary_chi1(parameters par, derivs_2D W, dou
 
 		get_ComplexField(par, indx_a, indx_a, W , &U_a);
 		get_ComplexField(par, indx_b, indx_b, W , &U_b);
-		MapFirstDerivative_Dom_a_to_Dom_b(par,  iDom_a, chi_1_Dom_a, chi_2_Dom_a, U_a, 
-																					  iDom_b, chi_1_Dom_b, chi_2_Dom_b, &U_a);
+		MapFirstDerivative_Dom_a_to_Dom_b(par,  iDom_a, chi_1_Dom_a, chi_2_Dom_a, U_a, iDom_b, chi_1_Dom_b, chi_2_Dom_b, &U_a);
 				
-		F[iF] = U_b.d1 - U_a.d1;	    	
+		F[iF] = U_b.d1 - U_a.d1;
 	}
 	
 	return;

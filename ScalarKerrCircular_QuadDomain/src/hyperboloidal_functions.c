@@ -336,7 +336,7 @@ double complex HyperboloidalEffectiveSource(parameters par, int iDom, int j1, in
   double complex hyp_S_eff=0;
   
   if(iDom == par.Dom_ptcl){
-    int N1_Seff=par.N1_LoadSeff, N2_Seff=par.N2_LoadSeff;
+    int N1_Seff=par.N1_PuncSeff, N2_Seff=par.N2_PuncSeff;
     
     double real_hS_eff, imag_hS_eff, chi_1=par.grid_chi_1[iDom][j1], chi_2=par.grid_chi_2[iDom][j2];
 

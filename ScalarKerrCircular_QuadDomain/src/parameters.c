@@ -4,7 +4,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 	(*par).TEST_Func_FLAG = 0;	//0: No Test Function; 1: Test Function
 	
 	//INPUT PHYSICAL PARAMETERS------------------------------------
-	(*par).rho_min=0.;
+	(*par).rho_min=0.0;
 	(*par).FLAG_Trajec =  (M_Omega0 >= 0) ? +1 : -1;; //Trajectory direction: +1=prograde, -1=retrograde
 	(*par).a_over_M = a_over_M; //Black Hole spin in units of M
 	(*par).r0_over_M =  pow(1./M_Omega0 - (*par).FLAG_Trajec*(*par).a_over_M,2./3 );//Particle's orbital radius in units of M
@@ -56,10 +56,10 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 
 	//RESOLUTION INPUT DATA ------------------------------------
 	sprintf((*par).grid_1_PuncSeff, "Gauss"); //Grid 	
-	(*par).N1_PuncSeff = 100;
+	(*par).N1_PuncSeff = 50;
 
 	sprintf((*par).grid_2_PuncSeff, "Radau_RHS"); //Grid 
-	(*par).N2_PuncSeff = 100;
+	(*par).N2_PuncSeff = 50;
 	(*par).prec = 63.81836;
 	//63.81836;
 	//159.54590;//63.81836;//31.90918;////31.90918;//15.95459; //Precision in Mathematica Notebook
