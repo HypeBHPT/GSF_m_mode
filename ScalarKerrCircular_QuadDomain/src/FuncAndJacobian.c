@@ -119,10 +119,10 @@ void J_times_DX(parameters par, double *X,double *DX, double *JDX)
 				// get_W_at_Grid(par, iDom, j1, j2, DW, DW_atGrid);
 
 	      
-	      if(j1*j2*( j1-N1 )*( j2-N2 )!=0 )
+	    if(j1*j2*( j1-N1 )*( j2-N2 )!=0 )
 	      	LinearFieldEquations(par, W, DW, ExtraParameters, DExtraParameters, iDom, j1, j2, Eq);
-				else
-					LinearBoundaryCondition(par, W, DW, ExtraParameters, DExtraParameters, iDom, j1, j2, Eq);
+		else
+			LinearBoundaryCondition(par, W, DW, ExtraParameters, DExtraParameters, iDom, j1, j2, Eq);
 					
 	      for(iFields=0; iFields<nFields; iFields++){
 	      	int Indx = Index(par, iDom, iFields, j1, j2);

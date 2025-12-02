@@ -13,13 +13,13 @@ int main()
 	double start_time, final_time;	
 	double r0_over_M_Schwarzschild = 10, 
 		   M_Omega0 = pow(r0_over_M_Schwarzschild, -3./2), 
-		   a_over_M = 0.9;
+		   a_over_M = 0.;
 
 	start_time = omp_get_wtime();
 	int n_omp = omp_get_max_threads();
 
 	int nbar = 2; //Order of Puncture Scheme
-	int N = 30; //Order of numerical resolution (assuming same N in all domains and all directions)
+	int N = 5; //Order of numerical resolution (assuming same N in all domains and all directions)
 	int	m=2; //Azimutal Mode
 	
 	
@@ -48,6 +48,9 @@ int main()
 						
 						set_parameters(&par, N, nbar, m, M_Omega0, a_over_M);						
 						par.fout = stdout;
+
+						
+					
 						
 						//------------------------------------------------- 
 						printf("Solving a_over_M = %lf, M_Omega0 = %lf, r0_over_M = %lf, m = %d, nbar = %d, N=%d, on thread = %d (%d)\n", par.a_over_M, par.M_Omega0, par.r0_over_M, par.m, par.nbar, N, par.i_omp, n_omp ); 
@@ -71,7 +74,8 @@ int main()
 								exit(-1);
 							}
 									
-						}							
+						}
+													
 						//----------------------------------------------
 						
 
@@ -79,6 +83,12 @@ int main()
 						X  = dvector(0, par.Ntotal);
 						get_InitialGuess(par, X); //initialise solution field
 						//------------
+
+						//-----------------------------------------------
+						double **B[nDom];
+						get_B(par, X, B);
+						exit(-1);
+						//-----------------------------------------------------------------------------------------------
 						
 						double  start_time_solver, final_time_solver;
 						start_time_solver = clock(); //Start measuring time	

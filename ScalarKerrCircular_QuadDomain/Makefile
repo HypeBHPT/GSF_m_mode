@@ -19,7 +19,7 @@ DEPS = $(INCD)/$(wildcard *.h)
 
 
 #set of source .c files
-SRC = kerr-circular.c load_data.c test_routines.c hyperboloidal_functions.c SelfForce_Functions.c parameters.c Coordinates.c IndexRoutines.c solve_equations.c derivatives.c FieldEqs.c Allocate.c get_InitialGuess.c debug.c newton.c newton_direct.c output.c Solve_PDE.c spectral_utilities.c utilities.c FuncAndJacobian.c
+SRC = SCDD.c kerr-circular.c load_data.c test_routines.c hyperboloidal_functions.c SelfForce_Functions.c parameters.c Coordinates.c IndexRoutines.c solve_equations.c derivatives.c FieldEqs.c Allocate.c get_InitialGuess.c debug.c newton.c newton_direct.c output.c Solve_PDE.c spectral_utilities.c utilities.c FuncAndJacobian.c
   
 #set of object .o files
 OBJS = $(SRC:.c=.o)

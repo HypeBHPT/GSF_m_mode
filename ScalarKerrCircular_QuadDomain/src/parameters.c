@@ -4,7 +4,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 	(*par).TEST_Func_FLAG = 0;	//0: No Test Function; 1: Test Function
 	
 	//INPUT PHYSICAL PARAMETERS------------------------------------
-	(*par).rho_min=0.5;
+	(*par).rho_min=0.;
 	(*par).FLAG_Trajec =  (M_Omega0 >= 0) ? +1 : -1;; //Trajectory direction: +1=prograde, -1=retrograde
 	(*par).a_over_M = a_over_M; //Black Hole spin in units of M
 	(*par).r0_over_M =  pow(1./M_Omega0 - (*par).FLAG_Trajec*(*par).a_over_M,2./3 );//Particle's orbital radius in units of M
@@ -42,6 +42,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 	// double rh_over_r0 = (*par).rh_over_M/(*par).r0_over_M, r0_over_rh = 1/rh_over_r0;
 		
 	(*par).eta = (1 - sigma0)/(sigma0*sqrt(f0)*(1+sigma0)); //Size of Excition Region in R = eta rh, with R = radius in particle' s frame
+	(*par).eta = 0.9* (*par).eta;
 		
 	(*par).r_plus_over_M  = (*par).r0_over_M + sqrt(f0)* (*par).eta * (*par).rh_over_M; //Effective Source outter boundary in units of M
 	(*par).r_minus_over_M = (*par).r0_over_M - sqrt(f0)* (*par).eta * (*par).rh_over_M; //Effective Source inner boundary in units of M	
@@ -156,7 +157,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 		
 
 	if((*par).TEST_Func_FLAG==0)
-		sprintf((*par).SimName, "M_Omega0_%3.5f/r0_over_M_%3.5f_a_over_M_%2.2f/N_input_%d/Prec_%lf/nbarMax_%d/m_%d/N1_%d_N2_%d/", M_Omega0, (*par).r0_over_M, (*par).a_over_M, (*par).N2_PuncSeff, (*par).prec, (*par).nbar, (int)(*par).m, N1, N2 );
+		sprintf((*par).SimName, "M_Omega0_%3.5f/r0_over_M_%3.5f_a_over_M_%2.2f/N_input_%d/Prec_%lf/eta_%f/m_%d/N1_%d_N2_%d/", M_Omega0, (*par).r0_over_M, (*par).a_over_M, (*par).N2_PuncSeff, (*par).prec, (*par).eta, (int)(*par).m, N1, N2 );
 	else
 		sprintf((*par).SimName, "M_Omega0_%3.5f/r0_over_M_%3.5f_a_over_M_%2.2f/TestFunction/m_%d/N1_%d_N2_%d/", M_Omega0,(*par).r0_over_M, (*par).a_over_M,  (int)(*par).m, N1, N2 );
 	

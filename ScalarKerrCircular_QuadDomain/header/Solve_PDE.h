@@ -313,6 +313,11 @@ double get_x2_from_tau(parameters par, double x);
 void get_SpecDerv_from_x1x2(parameters par, derivs_2D W, derivs_2D U, double x1, int n);
 double get_AngleIncrement(char *grid, int N);
 
+// Routines in "SCDD.c"
+void get_B_indexRange(parameters par, int idom, int *i1_initial, int *i1_final, int *i2_initial, int *i2_final, int *nB_total);
+void B_times_v(parameters par, int idom, double *X, double *DX, double *B_v);
+void get_B(parameters par, double *X, double ***J);
+
 // Routine in debug.c
 void pause();
 void PrintVector(parameters par, double *J, int na, int nb);

@@ -188,6 +188,7 @@ void get_Puncture_EffectiveSource(parameters *par){
  for(i1=0; i1<=N1; i1++){
    chi_1 = get_grid( (*par).grid_1_PuncSeff, i1, N1 );
    for(i2=0; i2<=N2; i2++){
+    
     chi_2 = get_grid( (*par).grid_2_PuncSeff, i2, N2 );
 
     get_sigma(*par, idom_part, chi_1, chi_2, &sigma);    
@@ -229,13 +230,14 @@ void get_Puncture_EffectiveSource(parameters *par){
 
     Re_Hyp_Seff[i1][i2] = creal(Hyp_Seff_complex); 
     Im_Hyp_Seff[i1][i2] = cimag(Hyp_Seff_complex);
-
-    double complex Punc_BL_Bound_complex = Punc_BL_Bound[0] + I* Punc_BL_Bound[1],
+    if((*par).rho_min!=0){
+      double complex Punc_BL_Bound_complex = Punc_BL_Bound[0] + I* Punc_BL_Bound[1],
                     Hyp_phi_Punc_complex = Get_HypFunc_From_BLFunc(*par, sigma.d0, y.d0, 1, Punc_BL_Bound_complex); 
             
     
-    Re_Hyp_Punc[i1][i2] = creal(Hyp_phi_Punc_complex); 
-    Im_Hyp_Punc[i1][i2] = cimag(Hyp_phi_Punc_complex);
+      Re_Hyp_Punc[i1][i2] = creal(Hyp_phi_Punc_complex); 
+      Im_Hyp_Punc[i1][i2] = cimag(Hyp_phi_Punc_complex);
+    }
 
 
         
@@ -243,6 +245,7 @@ void get_Puncture_EffectiveSource(parameters *par){
   }
   
  }
+ 
  
 
  (*par).Re_cheb_phi_Punc = dvector(0, N1); Chebyshev_Coefficients(Re_Hyp_Punc_Bound, (*par).Re_cheb_phi_Punc, N1, (*par).grid_1_PuncSeff); 
