@@ -230,7 +230,7 @@ void func_Z(parameters par, double sigma, double y, int FLAG_NS, double complex 
   func_tortoise_Chi(par, sigma, &Chi, &dChi);
   
     
-  *Z = scale_cte * Omega * pow(Delta, -ss) * cexp( s*H ) * cexp( I*m*Chi ) * pow(cos_thetaOvertwo, -d1) * pow(sin_thetaOvertwo, -d2);
+  *Z = scale_cte * Omega * pow(Delta, -ss) * cexp( s*H ) * pow(cos_thetaOvertwo, -d1) * pow(sin_thetaOvertwo, -d2) * cexp( I*m*Chi );
     
   *dlnZ_dsigma = dOmega/Omega - ss*d_Delta_dsigma/Delta + s*dH + I*m*dChi ;
   *dlnZ_dy =  -d1 *  dcos_thetaOvertwo_dy/cos_thetaOvertwo - d2 * dsin_thetaOvertwo_dy/sin_thetaOvertwo;

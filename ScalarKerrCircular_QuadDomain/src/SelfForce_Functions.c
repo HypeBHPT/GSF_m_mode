@@ -177,9 +177,13 @@ void get_Puncture_EffectiveSource(parameters *par){
                 Seff_BL_complex,  Hyp_Seff_complex;
 
      
- double **Re_Hyp_Punc = dmatrix(0, N1, 0, N2), **Im_Hyp_Punc = dmatrix(0, N1, 0, N2);
+ double **Re_Hyp_Punc = NULL, **Im_Hyp_Punc = NULL;
+
+ if((*par).rho_min!=0){
+  Re_Hyp_Punc = dmatrix(0, N1, 0, N2); Im_Hyp_Punc = dmatrix(0, N1, 0, N2);
+ }
  
- FILE *fp = fopen("Hyp_Seff_m.dat", "w");
+ 
  
  for(i1=0; i1<=N1; i1++){
    chi_1 = get_grid( (*par).grid_1_PuncSeff, i1, N1 );
@@ -217,27 +221,29 @@ void get_Puncture_EffectiveSource(parameters *par){
       Re_dHyp_Punc_dy_Bound[i1] = creal(dHyp_phi_Punc_dy_Bound_complex); Im_dHyp_Punc_dy_Bound[i1] = cimag(dHyp_phi_Punc_dy_Bound_complex);
     }
     Seff_BL_complex = Seff_BL[0] + I* Seff_BL[1];
+    
     Hyp_Seff_complex = Get_HypFunc_From_BLFunc(*par, sigma.d0, y.d0, 1, Seff_BL_complex); 
     Hyp_Seff_complex = Rescale_Source(*par, sigma.d0, y.d0, Hyp_Seff_complex);
 
-    Re_Hyp_Seff[i1][i2] = creal(Hyp_Seff_complex); Im_Hyp_Seff[i1][i2] = cimag(Hyp_Seff_complex);
+    
+
+    Re_Hyp_Seff[i1][i2] = creal(Hyp_Seff_complex); 
+    Im_Hyp_Seff[i1][i2] = cimag(Hyp_Seff_complex);
 
     double complex Punc_BL_Bound_complex = Punc_BL_Bound[0] + I* Punc_BL_Bound[1],
                     Hyp_phi_Punc_complex = Get_HypFunc_From_BLFunc(*par, sigma.d0, y.d0, 1, Punc_BL_Bound_complex); 
-     
-    Re_Hyp_Punc[i1][i2] = creal(Hyp_phi_Punc_complex); Im_Hyp_Punc[i1][i2] = cimag(Hyp_phi_Punc_complex);
+            
+    
+    Re_Hyp_Punc[i1][i2] = creal(Hyp_phi_Punc_complex); 
+    Im_Hyp_Punc[i1][i2] = cimag(Hyp_phi_Punc_complex);
 
-    if(fabs(Seff_BL[0])>1.e1){
-    printf("dr=%3.15e, theta/pi=%lf, Seff=%lf, Hyp_Seff=%lf \n", fabs(r-par->r0_over_M), theta/Pi, Seff_BL[0],creal(Hyp_Seff_complex) );
-    }
 
-    fprintf(fp, "%3.15e %3.15e %3.15e %3.15e %3.15e %3.15e \n",chi_1, chi_2, sigma.d0, y.d0, creal(Hyp_Seff_complex), cimag(Hyp_Seff_complex) );
         
 
   }
-  fprintf(fp, "\n");
+  
  }
- fclose(fp);
+ 
 
  (*par).Re_cheb_phi_Punc = dvector(0, N1); Chebyshev_Coefficients(Re_Hyp_Punc_Bound, (*par).Re_cheb_phi_Punc, N1, (*par).grid_1_PuncSeff); 
  (*par).Im_cheb_phi_Punc = dvector(0, N1); Chebyshev_Coefficients(Im_Hyp_Punc_Bound, (*par).Im_cheb_phi_Punc, N1, (*par).grid_1_PuncSeff);
@@ -251,7 +257,12 @@ void get_Puncture_EffectiveSource(parameters *par){
  (*par).Re_cheb_Seff = dmatrix(0, N1, 0, N2); Chebyshev_Coefficients_2D(Re_Hyp_Seff, (*par).Re_cheb_Seff, N1, (*par).grid_1_PuncSeff, N2, (*par).grid_2_PuncSeff); output_Seff_SpecCoef(*par, Re_Hyp_Seff, "Re_Hyp_Seff");
  (*par).Im_cheb_Seff = dmatrix(0, N1, 0, N2); Chebyshev_Coefficients_2D(Im_Hyp_Seff, (*par).Im_cheb_Seff, N1, (*par).grid_1_PuncSeff, N2, (*par).grid_2_PuncSeff); output_Seff_SpecCoef(*par, Im_Hyp_Seff, "Im_Hyp_Seff");
  
- 
+ if((*par).rho_min!=0){    
+    (*par).Re_cheb_PuncField = dmatrix(0, N1, 0, N2); Chebyshev_Coefficients_2D(Re_Hyp_Punc, (*par).Re_cheb_PuncField, N1, (*par).grid_1_PuncSeff, N2, (*par).grid_2_PuncSeff); output_Seff_SpecCoef(*par, Re_Hyp_Punc, "Re_Hyp_Punc");
+    (*par).Im_cheb_PuncField = dmatrix(0, N1, 0, N2); Chebyshev_Coefficients_2D(Im_Hyp_Punc, (*par).Im_cheb_PuncField, N1, (*par).grid_1_PuncSeff, N2, (*par).grid_2_PuncSeff); output_Seff_SpecCoef(*par, Im_Hyp_Punc, "Im_Hyp_Punc");
+    Check_Seff_from_Punc(*par);
+    free_dmatrix(Re_Hyp_Punc, 0, N1, 0, N2); free_dmatrix(Im_Hyp_Punc, 0, N1, 0, N2);
+  }
  
 
  free_dvector(Re_Hyp_Punc_Bound, 0, N1); free_dvector(Im_Hyp_Punc_Bound, 0, N1);
@@ -259,7 +270,8 @@ void get_Puncture_EffectiveSource(parameters *par){
  free_dvector(Re_dHyp_Punc_dy_Bound, 0, N1); free_dvector(Im_dHyp_Punc_dy_Bound, 0, N1);
  free_dmatrix(Re_Hyp_Seff, 0, N1, 0, N2); free_dmatrix(Im_Hyp_Seff, 0, N1, 0, N2);
  
- free_dmatrix(Re_Hyp_Punc, 0, N1, 0, N2); free_dmatrix(Im_Hyp_Punc, 0, N1, 0, N2);
+ 
+ 
  
 
 
@@ -315,3 +327,108 @@ void get_HypDerv_from_BLDerv(parameters par, double sigma, double y, int FLAG_NS
    
    return SourceOut;
   }
+  //----------------------------------------------------------------------------------------
+void Check_Seff_from_Punc(parameters par){
+  int Ntotal = par.Ntotal,
+      N1_PuncSeff = par.N1_PuncSeff, N2_PuncSeff = par.N2_PuncSeff, idom = par.Dom_ptcl,
+      N1 = par.N1[idom], N2=par.N2[idom], i1, i2;
+  
+  func_derivs_2D sigma, y;
+
+  double *X_Punc=dvector(0,Ntotal),
+         *Seff = dvector(0, Ntotal), 
+         *A_Punc_Bulk = dvector(0, Ntotal);
+  
+  fill0_dvector(X_Punc, 0, Ntotal);
+  fill0_dvector(Seff, 0, Ntotal);
+  fill0_dvector(A_Punc_Bulk, 0, Ntotal);  
+  
+
+  FILE *fp_seff, *fp_Apunc, *fp_error;
+  char fn_seff[900], fn_Apunc[900], fn_error[900];
+  sprintf(fn_seff, "data/%s/Seff_in_SolverGrid.dat", par.SimName);
+  fp_seff = fopen(fn_seff, "w");
+  fprintf(fp_seff, "#1: chi1\t 2:chi2\t 3: chi1\t 4:chi2\t 5:Re(Seff)\t 6:Im(Seff)\n");
+
+  sprintf(fn_Apunc, "data/%s/A_Punc_in_SolverGrid.dat", par.SimName);
+  fp_Apunc = fopen(fn_Apunc, "w");
+  fprintf(fp_Apunc, "#1: chi1\t 2:chi2\t 3: sigma\t 4:y\t 5:Re(Punc)\t 6:Im(Punc)\n");
+
+  sprintf(fn_error, "data/%s/Error_Seff_Apunc.dat", par.SimName);
+  fp_error = fopen(fn_error, "w");
+  fprintf(fp_error, "#1: chi1\t 2:chi2\t 3: sigma\t 4:y\t 5:Re(Error)\t 6:Im(Error)\n");
+
+      for(i1=0; i1<=N1; i1++){
+        double chi_1 = par.grid_chi_1[idom][i1];
+        for(i2=0; i2<=N2; i2++){
+          double chi_2 = par.grid_chi_2[idom][i2];
+          get_sigma(par, idom, chi_1, chi_2, &sigma);
+          get_y(par, idom, chi_1, chi_2, &y);
+          int Indx_Re = Index(par, idom, 0, i1, i2),
+              Indx_Im = Index(par, idom, 1, i1, i2);
+
+  
+          
+        
+          X_Punc[Indx_Re] = Clenshaw_Chebyshev_2D(par.Re_cheb_PuncField, N1_PuncSeff, N2_PuncSeff, chi_1, chi_2); 
+          X_Punc[Indx_Im] = Clenshaw_Chebyshev_2D(par.Im_cheb_PuncField, N1_PuncSeff, N2_PuncSeff, chi_1, chi_2); 
+
+          
+
+          
+          Seff[Indx_Re] = Clenshaw_Chebyshev_2D(par.Re_cheb_Seff, N1_PuncSeff, N2_PuncSeff, chi_1, chi_2); 
+          Seff[Indx_Im] = Clenshaw_Chebyshev_2D(par.Im_cheb_Seff, N1_PuncSeff, N2_PuncSeff, chi_1, chi_2); 
+
+
+          fprintf(fp_seff, "%3.15e\t %3.15e\t %3.15e\t %3.15e\t %3.15e\t %3.15e\n", chi_1, chi_2, sigma.d0, y.d0, Seff[Indx_Re], Seff[Indx_Im]);
+          
+
+        }
+        fprintf(fp_seff, "\n");
+      }
+      fclose(fp_seff);
+
+  J_times_DX(par, X_Punc, X_Punc, A_Punc_Bulk);
+  
+
+  for(i1=0; i1<=N1; i1++){
+    double chi_1 = par.grid_chi_1[idom][i1];
+    for(i2=0; i2<=N2; i2++){
+      double chi_2 = par.grid_chi_2[idom][i2];
+      get_sigma(par, idom, chi_1, chi_2, &sigma);
+      get_y(par, idom, chi_1, chi_2, &y);
+      int Indx_Re = Index(par, idom, 0, i1, i2),
+          Indx_Im = Index(par, idom, 1, i1, i2);
+          
+      fprintf(fp_Apunc, "%3.15e\t %3.15e\t %3.15e\t %3.15e\t %3.15e\t %3.15e\n", chi_1, chi_2, sigma.d0, y.d0, A_Punc_Bulk[Indx_Re], A_Punc_Bulk[Indx_Im]);
+      fprintf(fp_error, "%3.15e\t %3.15e\t %3.15e\t %3.15e\t %3.15e\t %3.15e\n", chi_1, chi_2, sigma.d0, y.d0, 
+        fabs(A_Punc_Bulk[Indx_Re]-Seff[Indx_Re]), fabs(A_Punc_Bulk[Indx_Im]-Seff[Indx_Im]));
+    }
+    fprintf(fp_Apunc, "\n");
+    fprintf(fp_error, "\n");
+  }
+  fclose(fp_Apunc);
+  fclose(fp_error);
+
+  double error = 0.;
+  int iF;
+  for(iF=0; iF<nFields; iF++){
+    for(i1=0; i1<=N1; i1++){
+      for(i2=0; i2<=N2; i2++){
+        int II = Index(par, idom, iF, i1, i2);
+        if(fabs(A_Punc_Bulk[II] - Seff[II]) > error){
+          error = fabs(A_Punc_Bulk[II] - Seff[II]);
+        }
+      }
+    }
+  }
+  printf("Error of Seff - Punc_Bulk = %3.15e\n", error);
+      
+
+
+  free_dvector(X_Punc, 0, Ntotal);
+  free_dvector(Seff, 0, Ntotal);
+  free_dvector(A_Punc_Bulk, 0, Ntotal);
+  
+  return;
+}

@@ -961,9 +961,9 @@ void output_Puncture_at_Boundary(parameters par){
 }
 //-------------------------------------------------------------------------------
 void output_PunctureField(parameters par){
-  int N1 = par.N1_LoadSeff,//N1_out=100,
-      N2=par.N2_LoadSeff, //N2_out=100,
-      idom_part = par.Dom_ptcl, i1, i2, N1_out=par.N1[idom_part], N2_out=par.N2[idom_part];
+  int N1 = par.N1_PuncSeff, N1_out=100,
+      N2=par.N2_PuncSeff, N2_out=100,
+      idom_part = par.Dom_ptcl, i1, i2;
   FILE *fp;
   char fn[500];
   func_derivs_2D sigma, y;
@@ -974,11 +974,9 @@ void output_PunctureField(parameters par){
   fprintf(fp, "#1:x1\t 2:x2\t 3:sigma\t 4:y\t 5:Re Seff\t 6:Im Seff\n");
 
   for(i1=0; i1<=N1_out; i1++){
-    x1=par.grid_chi_1[idom_part][i1];
-    // x1 = -1. + 2.*i1/N1_out;
+     x1 = -1. + 2.*i1/N1_out;
     for(i2=0; i2<=N2_out; i2++){
-      x2=par.grid_chi_2[idom_part][i2];
-      // x2 = -1. + 2.*i2/N2_out;
+      x2 = -1. + 2.*i2/N2_out;
       
       get_sigma(par, idom_part, x1, x2, &sigma);
       get_y(par, idom_part, x1, x2, &y); 

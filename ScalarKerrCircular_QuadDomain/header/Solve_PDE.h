@@ -145,6 +145,7 @@ void load_Puncture_at_Boundary(parameters *par);
 void load_EffectiveSource(parameters *par);
 void free_external_data(parameters *par);
 void load_PunctureField(parameters *par);
+void free_puncture_domain(parameters *par);
 
 
 // Routines in "SelfForce_functions.c"
@@ -158,6 +159,7 @@ double complex Get_HypFunc_From_BLFunc(parameters par, double sigma, double y, i
 void get_HypDerv_from_BLDerv(parameters par, double sigma, double y, int FLAG_NS,  double complex d_phi_dr, double complex d_phi_dtheta, double complex *d_phi_dsigma, double complex *d_phi_dy);
 void get_Derivatives_HypFunc_From_BLFunc(parameters par, double sigma, double y, int FLAG_NS, double complex BL_Func, double complex dBL_Func_dsigma, double complex dBL_Func_dy, double complex *dHypFunc_dsigma, double complex *dHypFunc_dy);
 double complex Rescale_Source(parameters par, double sigma, double y,  double complex SourceIn);
+void Check_Seff_from_Punc(parameters par);
 
  // Routines in "hyperboloidal_functions.c"
 void func_rho(parameters par, double sigma, double *rho, double *drho_dsigma, double *d2rho_dsigma2);

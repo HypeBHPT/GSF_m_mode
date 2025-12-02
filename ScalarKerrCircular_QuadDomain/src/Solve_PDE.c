@@ -13,7 +13,7 @@ int main()
 	double start_time, final_time;	
 	double r0_over_M_Schwarzschild = 10, 
 		   M_Omega0 = pow(r0_over_M_Schwarzschild, -3./2), 
-		   a_over_M = 0.5;
+		   a_over_M = 0.9;
 
 	start_time = omp_get_wtime();
 	int n_omp = omp_get_max_threads();
@@ -64,7 +64,12 @@ int main()
 							// output_PunctureField(par);
 							output_Puncture_at_Boundary(par);	
 							output_EffectiveSource(par);
-							
+							if(par.rho_min!=0){
+								output_PunctureField(par);
+								free_puncture_domain(&par);
+								free_external_data(&par);
+								exit(-1);
+							}
 									
 						}							
 						//----------------------------------------------
@@ -109,6 +114,7 @@ int main()
 						free_dvector(X, 0, par.Ntotal);	
 						free_grid(&par);
 						if(par.TEST_Func_FLAG==0) free_external_data(&par);
+					
 			// }
 			// fclose(par.fout);
 		// }		

@@ -159,24 +159,24 @@ void load_PunctureField(parameters *par){
 //--------------------------------
 void free_external_data(parameters *par){
 	
-	free_dvector( (*par).Re_cheb_phi_Punc, 0, (*par).N1_LoadPunc);
-	free_dvector( (*par).Im_cheb_phi_Punc, 0, (*par).N1_LoadPunc);
+	free_dvector( (*par).Re_cheb_phi_Punc, 0, (*par).N1_PuncSeff);
+	free_dvector( (*par).Im_cheb_phi_Punc, 0, (*par).N1_PuncSeff);
 
-	free_dvector( (*par).Re_cheb_phi_Punc_sigma, 0, (*par).N1_LoadPunc);
-	free_dvector( (*par).Im_cheb_phi_Punc_sigma, 0, (*par).N1_LoadPunc);
+	free_dvector( (*par).Re_cheb_phi_Punc_sigma, 0, (*par).N1_PuncSeff);
+	free_dvector( (*par).Im_cheb_phi_Punc_sigma, 0, (*par).N1_PuncSeff);
 
-	free_dvector( (*par).Re_cheb_phi_Punc_y, 0, (*par).N1_LoadPunc);
-	free_dvector( (*par).Im_cheb_phi_Punc_y, 0, (*par).N1_LoadPunc);
+	free_dvector( (*par).Re_cheb_phi_Punc_y, 0, (*par).N1_PuncSeff);
+	free_dvector( (*par).Im_cheb_phi_Punc_y, 0, (*par).N1_PuncSeff);
 
-	free_dmatrix( (*par).Re_cheb_Seff, 0, (*par).N1_LoadSeff, 0, (*par).N2_LoadSeff);
-	free_dmatrix( (*par).Im_cheb_Seff, 0, (*par).N1_LoadSeff, 0, (*par).N2_LoadSeff);
+	free_dmatrix( (*par).Re_cheb_Seff, 0, (*par).N1_PuncSeff, 0, (*par).N2_PuncSeff);
+	free_dmatrix( (*par).Im_cheb_Seff, 0, (*par).N1_PuncSeff, 0, (*par).N2_PuncSeff);
 	return;
 }
 
 //--------------------------------
 void free_puncture_domain(parameters *par){
 		
-	free_dmatrix( (*par).Re_cheb_PuncField, 0, (*par).N1_LoadSeff, 0, (*par).N2_LoadSeff);
-	free_dmatrix( (*par).Im_cheb_PuncField, 0, (*par).N1_LoadSeff, 0, (*par).N2_LoadSeff);
+	free_dmatrix( (*par).Re_cheb_PuncField, 0, (*par).N1_PuncSeff, 0, (*par).N2_PuncSeff);
+	free_dmatrix( (*par).Im_cheb_PuncField, 0, (*par).N1_PuncSeff, 0, (*par).N2_PuncSeff);
 	return;
 }

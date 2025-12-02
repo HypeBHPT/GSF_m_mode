@@ -51,7 +51,10 @@ void LinearFieldEquations(parameters par, derivs_2D W, derivs_2D DW, double *Xpa
 // -------------------------------------------------------------------------------	
 // -------------------------------------------------------------------------------	
 void BoundaryCondition(parameters par, derivs_2D W, double *Xpar, int iDom, int j1, int j2, double *F){
-	// FieldEquations(par, W, Xpar, iDom, j1, j2, F);
+	if(par.rho_min!=0){
+		FieldEquations(par, W, Xpar, iDom, j1, j2, F);
+		return;
+	}
 	// return;
 
 
@@ -132,7 +135,11 @@ void BoundaryCondition(parameters par, derivs_2D W, double *Xpar, int iDom, int 
 }
 // -------------------------------------------------------------------------------	
 void LinearBoundaryCondition(parameters par, derivs_2D W, derivs_2D DW, double *Xpar, double *DXpar, int iDom, int j1, int j2, double *J){
-	LinearFieldEquations(par, W, DW, Xpar, DXpar, iDom, j1, j2, J);
+	if(par.rho_min!=0){
+		LinearFieldEquations(par, W, DW, Xpar, DXpar, iDom, j1, j2, J);
+		return;
+	}
+	
 	complex_derivs_2D Dw;
 	complex_sigma_derivs Dphi;
 		
