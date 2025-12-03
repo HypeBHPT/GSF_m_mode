@@ -44,7 +44,7 @@ void load_Puncture_at_Boundary(parameters *par){
 	int i1, N1, N2;
 	read_header(*par, fr, &N1, &N2);
 
-	(*par).N1_LoadPunc = N1;
+	(*par).N1_PuncSeff = N1;
 
 	(*par).Re_cheb_phi_Punc = dvector(0, N1);
 	(*par).Im_cheb_phi_Punc = dvector(0, N1);
@@ -92,8 +92,8 @@ void load_EffectiveSource(parameters *par){
 	int i1, i2, N1, N2;
 	read_header(*par, fr, &N1, &N2);
 
-	(*par).N1_LoadSeff = N1;
-	(*par).N2_LoadSeff = N2;
+	(*par).N1_PuncSeff = N1;
+	(*par).N2_PuncSeff = N2;
 
 	(*par).Re_cheb_Seff = dmatrix(0, N1, 0 , N2);
 	(*par).Im_cheb_Seff = dmatrix(0, N1, 0 , N2);

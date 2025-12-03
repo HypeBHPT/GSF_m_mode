@@ -18,8 +18,8 @@ int main()
 	start_time = omp_get_wtime();
 	int n_omp = omp_get_max_threads();
 
-	int nbar = 2; //Order of Puncture Scheme
-	int N = 5; //Order of numerical resolution (assuming same N in all domains and all directions)
+	int nbar = 2;//NAN; //Order of Puncture Scheme: use NAN for Barry's implementation; otherwise integrals will use Patrick's implementation
+	int N = 15; //Order of numerical resolution (assuming same N in all domains and all directions)
 	int	m=2; //Azimutal Mode
 	
 	
@@ -59,12 +59,12 @@ int main()
 						
 					
 						if(par.TEST_Func_FLAG==0){
-							get_Puncture_EffectiveSource(&par);
-							
-							// load_EffectiveSource(&par);
-							// load_Puncture_at_Boundary(&par);
-							// load_PunctureField(&par);								
-							// output_PunctureField(par);
+							if(par.nbar==NAN) 
+								get_Puncture_EffectiveSource(&par);
+							else {							
+								load_EffectiveSource(&par);
+								load_Puncture_at_Boundary(&par);								
+							}
 							output_Puncture_at_Boundary(par);	
 							output_EffectiveSource(par);
 							if(par.rho_min!=0){
@@ -84,11 +84,7 @@ int main()
 						get_InitialGuess(par, X); //initialise solution field
 						//------------
 
-						//-----------------------------------------------
-						double **B[nDom];
-						get_B(par, X, B);
-						exit(-1);
-						//-----------------------------------------------------------------------------------------------
+
 						
 						double  start_time_solver, final_time_solver;
 						start_time_solver = clock(); //Start measuring time	

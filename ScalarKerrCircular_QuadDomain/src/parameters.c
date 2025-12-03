@@ -28,6 +28,11 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 	(*par).q = 1.; //Particle's scalar Charge
 	(*par).m = m; //Azimutal Mode
 	(*par).nbar = nbar; //Puncture order
+	if((*par).nbar!=NAN && (*par).a_over_M){
+		fprintf(stderr, "Error in set_parameters: Patrick's implementation with nbar = %d not available for BH spin a/M = %f\n", (*par).nbar!=NAN, (*par).a_over_M);
+		exit(-1);
+	}
+
 	double M = 1;
 	effsource_init(M, a_over_M);
 	
@@ -38,8 +43,6 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 	func_f(*par, (*par).r0_over_M, &f0, &df0_dr);
 	(*par).f0 = f0; 
 	
-	
-	// double rh_over_r0 = (*par).rh_over_M/(*par).r0_over_M, r0_over_rh = 1/rh_over_r0;
 		
 	(*par).eta = (1 - sigma0)/(sigma0*sqrt(f0)*(1+sigma0)); //Size of Excition Region in R = eta rh, with R = radius in particle' s frame
 	(*par).eta = 0.9* (*par).eta;
@@ -156,8 +159,13 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 	//------------------------------------------------------
 		
 
-	if((*par).TEST_Func_FLAG==0)
-		sprintf((*par).SimName, "M_Omega0_%3.5f/r0_over_M_%3.5f_a_over_M_%2.2f/N_input_%d/Prec_%lf/eta_%f/m_%d/N1_%d_N2_%d/", M_Omega0, (*par).r0_over_M, (*par).a_over_M, (*par).N2_PuncSeff, (*par).prec, (*par).eta, (int)(*par).m, N1, N2 );
+	if((*par).TEST_Func_FLAG==0){
+		if((*par).nbar==NAN){
+			sprintf((*par).SimName, "M_Omega0_%3.5f/r0_over_M_%3.5f_a_over_M_%2.2f/N_input_%d/Prec_%lf/eta_%f/m_%d/N1_%d_N2_%d/", M_Omega0, (*par).r0_over_M, (*par).a_over_M, (*par).N2_PuncSeff, (*par).prec, (*par).eta, (int)(*par).m, N1, N2 );
+		}
+		else
+			sprintf((*par).SimName, "M_Omega0_%3.5f/r0_over_M_%3.5f_a_over_M_%2.2f/nbar_%d/N_input_%d/Prec_%lf/eta_%f/m_%d/N1_%d_N2_%d/", M_Omega0, (*par).r0_over_M, (*par).a_over_M, (*par).nbar, (*par).N2_PuncSeff, (*par).prec, (*par).eta, (int)(*par).m, N1, N2 );
+	}
 	else
 		sprintf((*par).SimName, "M_Omega0_%3.5f/r0_over_M_%3.5f_a_over_M_%2.2f/TestFunction/m_%d/N1_%d_N2_%d/", M_Omega0,(*par).r0_over_M, (*par).a_over_M,  (int)(*par).m, N1, N2 );
 	
