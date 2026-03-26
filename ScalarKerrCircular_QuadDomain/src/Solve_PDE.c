@@ -19,7 +19,7 @@ int main()
 	int n_omp = omp_get_max_threads();
 
 	int nbar = 2;//NAN; //Order of Puncture Scheme: use NAN for Barry's implementation; otherwise integrals will use Patrick's implementation
-	int N = 15; //Order of numerical resolution (assuming same N in all domains and all directions)
+	int N = 3; //Order of numerical resolution (assuming same N in all domains and all directions)
 	int	m=2; //Azimutal Mode
 	
 	

@@ -28,9 +28,9 @@ void PrintMatrix(parameters par, char *fn, double **J, int la, int lb, int ca, i
         // Get_Indices_From_Index(par, i, &iDom, &iF, &j1_grid, &j2_grid);
         // printf("I=%d, idom=%d, iF=%d, j1=%d, j2=%d\n", i, iDom, iF, j1_grid, j2_grid);
    for(j=ca; j<=cb; j++){
-     double out = fabs(J[i][j])<1.0e-12? 0.:J[i][j];
+     double out = J[i][j];//fabs(J[i][j])<1.0e-12? 0.:J[i][j];
 //      printf(fp,"%3.5e ", out);
-     fprintf(fp,"%3.2lf ", out);
+     fprintf(fp,"%3.3lf ", out);
        
      // if(fabs( J[i][j])>5.0e-8 /*isnan(J[i])!=0*/ ){
 

@@ -118,14 +118,14 @@ int newton_direct(parameters par, double *X)
 	}
 	// exit(-1);
 	Jacobian(par, X, J);
-	// PrintMatrix(par, "Jacobian.txt", J, 0, Ntotal, 0, Ntotal);
+	PrintMatrix(par, "Jacobian.txt", J, 0, Ntotal, 0, Ntotal);
 	// exit(-1);
 
-	// double **J_FD;
-	// J_FD = dmatrix(0, Ntotal, 0, Ntotal);
-	// Jacobian_FD(par, X, J_FD);
-	// PrintMatrix(par, "Jacobian_FD.txt", J_FD, 0, Ntotal, 0, Ntotal);
-	// exit(-1);
+	double **J_FD;
+	J_FD = dmatrix(0, Ntotal, 0, Ntotal);
+	Jacobian_FD(par, X, J_FD);
+	PrintMatrix(par, "Jacobian_FD.txt", J_FD, 0, Ntotal, 0, Ntotal);
+	exit(-1);
 	ludcmp(J, Ntotal, indx, &d, 0);		
 	
 	
