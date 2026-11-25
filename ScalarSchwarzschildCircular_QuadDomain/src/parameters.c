@@ -1,7 +1,7 @@
 #include "Solve_PDE.h"
 
 void set_parameters(parameters *par, int N, int nbar, int m, double r0){
-	(*par).TEST_Func_FLAG = 1;	//0: No Test Function; 1: Test Function
+	(*par).TEST_Func_FLAG = 0;	//0: No Test Function; 1: Test Function
 	
 	//INPUT PHYSICAL PARAMETERS------------------------------------
 	

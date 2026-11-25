@@ -4,7 +4,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 	(*par).TEST_Func_FLAG = 0;	//0: No Test Function; 1: Test Function
 	
 	//INPUT PHYSICAL PARAMETERS------------------------------------
-	(*par).rho_min=0.;
+	(*par).rho_min=0.9;
 	(*par).FLAG_Trajec =  (M_Omega0 >= 0) ? +1 : -1;; //Trajectory direction: +1=prograde, -1=retrograde
 	(*par).a_over_M = a_over_M; //Black Hole spin in units of M
 	(*par).r0_over_M =  pow(1./M_Omega0 - (*par).FLAG_Trajec*(*par).a_over_M,2./3 );//Particle's orbital radius in units of M
@@ -160,7 +160,7 @@ void set_parameters(parameters *par, int N, int nbar, int m, double M_Omega0, do
 		
 
 	if((*par).TEST_Func_FLAG==0){
-		if((*par).nbar==NAN){
+		if((*par).nbar==100000){
 			sprintf((*par).SimName, "M_Omega0_%3.5f/r0_over_M_%3.5f_a_over_M_%2.2f/N_input_%d/Prec_%lf/eta_%f/m_%d/N1_%d_N2_%d/", M_Omega0, (*par).r0_over_M, (*par).a_over_M, (*par).N2_PuncSeff, (*par).prec, (*par).eta, (int)(*par).m, N1, N2 );
 		}
 		else

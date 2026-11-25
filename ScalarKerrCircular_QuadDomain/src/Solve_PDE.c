@@ -18,8 +18,8 @@ int main()
 	start_time = omp_get_wtime();
 	int n_omp = omp_get_max_threads();
 
-	int nbar = 2;//NAN; //Order of Puncture Scheme: use NAN for Barry's implementation; otherwise integrals will use Patrick's implementation
-	int N = 3; //Order of numerical resolution (assuming same N in all domains and all directions)
+	int nbar = 100000;//NAN; //Order of Puncture Scheme: use NAN for Barry's implementation; otherwise integrals will use Patrick's implementation
+	int N = 50; //Order of numerical resolution (assuming same N in all domains and all directions)
 	int	m=2; //Azimutal Mode
 	
 	
@@ -59,8 +59,10 @@ int main()
 						
 					
 						if(par.TEST_Func_FLAG==0){
-							if(par.nbar==NAN) 
+							if(par.nbar==100000){ 
 								get_Puncture_EffectiveSource(&par);
+								exit(-1);
+							}
 							else {							
 								load_EffectiveSource(&par);
 								load_Puncture_at_Boundary(&par);								

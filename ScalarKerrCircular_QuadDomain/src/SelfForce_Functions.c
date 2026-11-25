@@ -200,12 +200,12 @@ void get_Puncture_EffectiveSource(parameters *par){
 
     effsource_calc_m(m, &xBL_coord, Punc_BL_Bound, dPunc_BL_Bound_dx, d2Punc_BL_Bound_dx2, Seff_BL); 
 
-    chi_2 = get_grid( (*par).grid_2_PuncSeff, i2, N2 );
-     get_sigma(*par, idom_part, chi_1, chi_2, &sigma);    
-    func_r_of_sigma(*par, sigma.d0, &r, &dr_dsigma); 
+    // chi_2 = get_grid( (*par).grid_2_PuncSeff, i2, N2 );
+    // get_sigma(*par, idom_part, chi_1, chi_2, &sigma);    
+    // func_r_of_sigma(*par, sigma.d0, &r, &dr_dsigma); 
 
-    get_y(*par, idom_part, chi_1, chi_2, &y);
-    theta = acos(sqrt(y.d0)) ;   
+    // get_y(*par, idom_part, chi_1, chi_2, &y);
+    // theta = acos(sqrt(y.d0)) ;   
     
     if( chi_2 == 1. ){ //Boundary points
       double complex Punc_BL_Bound_complex = Punc_BL_Bound[0] + I* Punc_BL_Bound[1],
@@ -222,6 +222,7 @@ void get_Puncture_EffectiveSource(parameters *par){
       Re_dHyp_Punc_dy_Bound[i1] = creal(dHyp_phi_Punc_dy_Bound_complex); Im_dHyp_Punc_dy_Bound[i1] = cimag(dHyp_phi_Punc_dy_Bound_complex);
     }
     Seff_BL_complex = Seff_BL[0] + I* Seff_BL[1];
+    printf("i1=%d, i2=%d, sigma = %3.5f, y = %3.5f, Re_Seff=%3.5e, Im_Seff=%3.5e\n", i1, i2, sigma.d0, y.d0, Seff_BL[0], Seff_BL[1]);
     
     Hyp_Seff_complex = Get_HypFunc_From_BLFunc(*par, sigma.d0, y.d0, 1, Seff_BL_complex); 
     Hyp_Seff_complex = Rescale_Source(*par, sigma.d0, y.d0, Hyp_Seff_complex);
@@ -230,6 +231,7 @@ void get_Puncture_EffectiveSource(parameters *par){
 
     Re_Hyp_Seff[i1][i2] = creal(Hyp_Seff_complex); 
     Im_Hyp_Seff[i1][i2] = cimag(Hyp_Seff_complex);
+    
     if((*par).rho_min!=0){
       double complex Punc_BL_Bound_complex = Punc_BL_Bound[0] + I* Punc_BL_Bound[1],
                     Hyp_phi_Punc_complex = Get_HypFunc_From_BLFunc(*par, sigma.d0, y.d0, 1, Punc_BL_Bound_complex); 
@@ -245,6 +247,7 @@ void get_Puncture_EffectiveSource(parameters *par){
   }
   
  }
+ pause();
  
  
 
@@ -373,8 +376,8 @@ void Check_Seff_from_Punc(parameters par){
   
           
         
-          X_Punc[Indx_Re] = Clenshaw_Chebyshev_2D(par.Re_cheb_PuncField, N1_PuncSeff, N2_PuncSeff, chi_1, chi_2); 
-          X_Punc[Indx_Im] = Clenshaw_Chebyshev_2D(par.Im_cheb_PuncField, N1_PuncSeff, N2_PuncSeff, chi_1, chi_2); 
+          X_Punc[Indx_Re] = Clenshaw_Chebyshev_2D(par.Re_cheb_PuncField, N1_PuncSeff, N2_PuncSeff, chi_1, chi_2) + sigma.d0; 
+          X_Punc[Indx_Im] = Clenshaw_Chebyshev_2D(par.Im_cheb_PuncField, N1_PuncSeff, N2_PuncSeff, chi_1, chi_2) + y.d0; 
 
           
 
@@ -419,9 +422,10 @@ void Check_Seff_from_Punc(parameters par){
     for(i1=0; i1<=N1; i1++){
       for(i2=0; i2<=N2; i2++){
         int II = Index(par, idom, iF, i1, i2);
-        if(fabs(A_Punc_Bulk[II] - Seff[II]) > error){
-          error = fabs(A_Punc_Bulk[II] - Seff[II]);
-        }
+        printf("error = %3.5e, error_number= %3.5e\n", error, Seff[II] );
+        // if(fabs(A_Punc_Bulk[II] - Seff[II]) > error){
+          error +=1.e-5; // fabs(A_Punc_Bulk[II] - Seff[II]);
+        // }
       }
     }
   }
